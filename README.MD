@@ -1,6 +1,4 @@
-## Assignment 2 – IDG2001
-
-# Reddit-like Forum Website
+# Assignment 2 – IDG2001
 
 ## Overview
 This project aims to develop a simplified version of a Reddit-like forum website using Docker and DockerCompose, hosted on the Chameleon Cloud (OpenStack). The website allows users to interact by creating and browsing posts within different categories, similar to subreddits.
