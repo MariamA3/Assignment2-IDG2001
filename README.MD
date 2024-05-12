@@ -53,8 +53,7 @@ Assignment2-IDG2001/
 │   └── ...
 │
 ├── database/                # database
-│   ├── Dockerfile
-│   └── ...
+│  
 │
 ├── backend/                 # Python backend
 │   ├── Dockerfile
