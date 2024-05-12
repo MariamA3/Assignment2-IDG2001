@@ -101,3 +101,14 @@ load balancer is used to distribute incoming traffic among multiple web servers 
 
 
 database is used to store user data, post information, and other relevant data. The database is modeled to ensure efficient storage and retrieval of information.
+
+#Tasks
+
+## jon Helge
+- login system med autentisering
+
+## Mariam
+- cache, load balancer og like batching
+
+## Sebastian
+- api endpinits for å hente data fra databasen
