@@ -82,3 +82,10 @@ Assignment2-IDG2001/
     ├── pgdata/              # PostgreSQL data
     └── ...
 ```
+# processor should contain api calls and like batching, like batching is a process that collects likes and updates the database in batches to reduce the number of calls to the database.
+# redis is chache for the database, it stores the most recent data in memory to reduce the number of calls to the database.
+# volumes is used to store persistent data for the databases, so that the data is not lost when the containers are restarted.Backup and restore of the database can be done by copying the data from the volumes folder.
+# frontend is the user interface, it is a react app that communicates with the backend through api calls.
+# backend is the backend of the application, it is a python app that communicates with the database and the frontend through api calls.
+# load balancer is used to distribute incoming traffic among multiple web servers to improve scalability and reliability.
+# database is used to store user data, post information, and other relevant data. The database is modeled to ensure efficient storage and retrieval of information.
