@@ -68,7 +68,12 @@ Assignment2-IDG2001/
 │   ├── requirements.txt
 │   └── ...
 │
+├── redis/                   # Real time data platform
+│   ├── Dockerfile
+│
 ├── docker-compose.yml       # Compose file to orchestrate containers
+├── Assignment 2.1.pdf       # Assignment 2.1 assignment description
+├── README.MD                # README.MD
 │
 └── volumes/                 # Persistent data for databases
     ├── pgdata/              # PostgreSQL data
