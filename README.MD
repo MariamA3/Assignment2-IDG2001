@@ -52,6 +52,10 @@ Assignment2-IDG2001/
 │   ├── public/
 │   └── ...
 │
+├── database/                # database
+│   ├── Dockerfile
+│   └── ...
+│
 ├── backend/                 # Python backend
 │   ├── Dockerfile
 │   ├── app.py
