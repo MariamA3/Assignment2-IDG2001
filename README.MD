@@ -11,7 +11,7 @@ This project aims to develop a simplified version of a Reddit-like forum website
 - **Cache and Load Balancing:** The system includes a cache module to enhance performance under heavy loads. Additionally, a load balancer distributes incoming traffic among multiple web servers to improve scalability and reliability.
 - **Data Persistence:** A relational database system (RDB) is utilized to store user data, post information, and other relevant data. The database is modeled to ensure efficient storage and retrieval of information.
 
-## Technologies Used 
+## Technologies Used
 
 ***Legg til og fjern ting herfra**
 
@@ -41,3 +41,34 @@ This project aims to develop a simplified version of a Reddit-like forum website
 - Sebastian Haugen
 
 
+## Folder structure
+
+Assignment2-IDG2001/
+│
+├── frontend/                # React frontend
+│   ├── Dockerfile
+│   ├── src/
+│   ├── public/
+│   └── ...
+│
+├── backend/                 # Python backend
+│   ├── Dockerfile
+│   ├── app.py
+│   ├── requirements.txt
+│   └── ...
+│
+├── nginx/                   # NGINX for load balancing
+│   ├── Dockerfile
+│   └── nginx.conf
+│
+├── processor/               # Processing + Like-batcher
+│   ├── Dockerfile
+│   ├── processor.py
+│   ├── requirements.txt
+│   └── ...
+│
+├── docker-compose.yml       # Compose file to orchestrate containers
+│
+└── volumes/                 # Persistent data for databases
+    ├── pgdata/              # PostgreSQL data
+    └── ...
