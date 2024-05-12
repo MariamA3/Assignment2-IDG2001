@@ -42,6 +42,7 @@ This project aims to develop a simplified version of a Reddit-like forum website
 
 
 ## Folder structure
+```bash
 
 Assignment2-IDG2001/
 │
@@ -72,3 +73,4 @@ Assignment2-IDG2001/
 └── volumes/                 # Persistent data for databases
     ├── pgdata/              # PostgreSQL data
     └── ...
+```
