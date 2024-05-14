@@ -1,29 +1,26 @@
 import os
-import pymysql
+from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 
-def get_db_connection():
+# Initialize SQLAlchemy
+db = SQLAlchemy()
+
+def get_db_connection(app):
     # Load environment variables from .env file
     load_dotenv()
 
     # Get database connection details from environment variables
     DB_HOST = os.getenv('MYSQLHOST')
-    DB_PORT = int(os.getenv('MYSQLPORT'))  # convert to int because it's a port number
+    DB_PORT = os.getenv('MYSQLPORT')  # no need to convert to int for SQLAlchemy
     DB_USER = os.getenv('MYSQLUSER')
     DB_PASSWORD = os.getenv('MYSQLPASSWORD')
     DB_NAME = os.getenv('MYSQLDATABASE')
 
-    # Establish a connection to the database
-    try:
-        conn = pymysql.connect(
-            host=DB_HOST,
-            port=DB_PORT,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            db=DB_NAME
-        )
-        print("Connected to the database!")
-        return conn
-    except Exception as e:
-        print(f"Error connecting to the database: {e}")
-        return None
+    # Set the SQLAlchemy database URI
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # Initialize the app with SQLAlchemy
+    db.init_app(app)
+
+    return db
