@@ -1,0 +1,22 @@
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-family: "verdana", sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--white);
+
+}
+
+:root {
+    --background-color: #1A1A1B;
+    --grey: #808080;
+    --white: #ffffff;
+    --button-color: #FF4500;
+}

@@ -1,0 +1,5 @@
+.sidebar {
+    text-align: center;
+    border-right: 1px solid var(--white); 
+    padding: 20px;
+  }
