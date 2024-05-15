@@ -1,5 +1,10 @@
 .navbar {
-    text-align: center;
+    display: flex;
     padding: 10px;
     border-bottom: 1px solid var(--white);
+    justify-content: space-between;
+}
+
+.navbar a:visited {
+    color: var(--white);
 }

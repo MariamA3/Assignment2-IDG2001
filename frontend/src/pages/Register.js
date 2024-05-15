@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Auth.css";
 
+// I have comment out some functionality will be implemented when we have a working backend
 function Register() {
   // State to hold form data for all fields
   const [formData, setFormData] = useState({
-    fullName: "",
+    username: "",
     email: "",
     password: "",
-    department: "",
-    position: "",
-    role: "",
   });
   /*
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,10 +27,9 @@ function Register() {
   const validateForm = () => {
     // Required fields check
     if (
-      !formData.fullName ||
+      !formData.username ||
       !formData.email ||
       !formData.password ||
-      !formData.role
     ) {
       return false;
     }
@@ -88,12 +85,12 @@ function Register() {
         <h2>Register</h2>
         <form noValidate>
           <div>
-            <label htmlFor="fullName">Full Name*</label>
+            <label htmlFor="username">Username*</label>
             <input
               type="text"
-              id="fullName"
-              name="fullName"
-              value={formData.fullName}
+              id="username"
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               placeholder="Enter your full name"
               required
@@ -123,46 +120,7 @@ function Register() {
               required
             />
           </div>
-          <div>
-            <label htmlFor="department">Department</label>
-            <input
-              type="text"
-              id="department"
-              name="department"
-              value={formData.department}
-              onChange={handleChange}
-              placeholder="Enter your department"
-            />
-          </div>
-          <div>
-            <label htmlFor="position">Position</label>
-            <select
-              id="position"
-              name="position"
-              value={formData.position}
-              onChange={handleChange}
-            >
-              <option value="">Select Position</option>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-              <option value="tA">TA</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="role">Role*</label>
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-            >
-              <option value="">Select Role</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-            </select>
-          </div>
-          <button type="submit">
+          <button type="submit">Register
           </button>
         </form>
         <p>

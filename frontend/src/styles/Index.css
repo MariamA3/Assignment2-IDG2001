@@ -11,12 +11,20 @@
 body {
     background-color: var(--background-color);
     color: var(--white);
-
 }
 
 :root {
-    --background-color: #1A1A1B;
-    --grey: #808080;
-    --white: #ffffff;
-    --button-color: #FF4500;
+    /* Main theme colors */
+    --background-color: #1A1A1B; 
+    --grey: #808080; 
+    --white: #ffffff; 
+    --button-color: #FF4500; 
+
+    /* Dark theme colors */
+    --background-color-dark: #1A1A1B; 
+    --text-color-light: #ffffff;
+    --dark-grey: #2B2B2B; 
+    --input-background-dark: #2B2B2B;
+    --button-color-dark: #962902; 
+    --button-hover-color-dark: #641a02; 
 }

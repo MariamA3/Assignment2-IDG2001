@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Auth.css";
 
-
+// I have comment out some functionality will be implemented when we have a working backends
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -84,7 +84,7 @@ function Login() {
             />
           </div>
 
-          <button type="submit"></button>
+          <button type="submit">Login</button>
         </form>
         <p>
           Don't have an account? <Link to="/register">Register here</Link>

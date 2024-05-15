@@ -1,5 +1,16 @@
 .sidebar {
     text-align: center;
-    border-right: 1px solid var(--white); 
+    border-right: 1px solid var(--white);
     padding: 20px;
-  }
+}
+
+/* Styles for screens smaller than 600px */
+@media (max-width: 600px) {
+    .sidebar {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+}
