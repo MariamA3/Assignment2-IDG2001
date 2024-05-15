@@ -1,11 +1,16 @@
 import time
 import redis
 import json
+# sjekk feilen her - M
+from config.databaseConnect import get_db_connection
 
 # Connect to Redis
 redis_host = 'redis'
 redis_port = 6379
 redis_client = redis.Redis(host=redis_host, port=redis_port)
+
+# Get database connection
+db_connection = get_db_connection()
 
 def process_likes():
     while True:
@@ -27,11 +32,20 @@ def process_likes():
 def process_likes_batch(batch):
     # Example: Update database with likes
     for like in batch:
-        process_like(json.loads(like))
+        process_like(json.loads(like)) 
 
 def process_like(like):
     # Process individual like
-    pass
+    if db_connection:
+        try:
+            with db_connection.cursor() as cursor:
+                # Example: Insert like into database
+                sql = "INSERT INTO likes (user_id, post_id) VALUES (%s, %s)"
+                cursor.execute(sql, (like['user_id'], like['post_id']))
+                db_connection.commit()
+                print("Like inserted successfully!")
+        except Exception as e:
+            print(f"Error inserting like into the database: {e}")
 
 if __name__ == '__main__':
     process_likes()
