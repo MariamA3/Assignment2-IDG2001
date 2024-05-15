@@ -1,11 +1,22 @@
+# Description: This file contains the routes for categories.
+# A route is a URL pattern that is associated with a function that is executed when the URL is visited.
+# Also called api endpoints.
+# This is for the categories table in the database.
+# The routes in this file allow users to perform CRUD operations on the categories table.
+
+# Import the Blueprint class from the flask module, which is used to create a Blueprint object
 from flask import Blueprint, request, jsonify
+
+# Import the db object from the databaseConnect module
 from config.databaseConnect import db
+
+# Import the Category model from the models module
 from models.models import Category
 
-# Create a Blueprint object for categories
+# Create a Blueprint object for categories, which represents the categories routes
 categories = Blueprint('categories', __name__)
 
-# GET all categories
+# GET all categories, returns a list of all categories
 @categories.route('/categories', methods=['GET'])
 def get_categories():
     categories_data = Category.query.all()
@@ -17,7 +28,7 @@ def get_categories():
     ]
     return jsonify(categories_list)
 
-# GET a specific category by ID
+# GET a specific category by ID, returns the category with the specified ID
 @categories.route('/categories/<int:id>', methods=['GET'])
 def get_category(id):
     category_data = Category.query.get(id)
@@ -29,7 +40,7 @@ def get_category(id):
         return jsonify(category)
     return jsonify({'message': 'Category not found'}), 404
 
-# CREATE a new category
+# CREATE a new category, creates a new category with the specified name
 @categories.route('/categories', methods=['POST'])
 def create_category():
     data = request.json
@@ -44,7 +55,8 @@ def create_category():
 
     return jsonify({'message': 'Category created successfully'}), 201
 
-# UPDATE an existing category by ID
+# UPDATE an existing category by ID, updates the category with the specified ID
+# The new name for the category is specified in the request body
 @categories.route('/categories/<int:id>', methods=['PUT'])
 def update_category(id):
     data = request.json
@@ -62,7 +74,8 @@ def update_category(id):
 
     return jsonify({'message': 'Category updated successfully'}), 200
 
-# DELETE a category by ID
+# DELETE a category by ID, deletes the category with the specified ID
+# If the category does not exist, return a 404 error
 @categories.route('/categories/<int:id>', methods=['DELETE'])
 def delete_category(id):
     category_data = Category.query.get(id)
