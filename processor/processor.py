@@ -1,8 +1,8 @@
 import time
 import redis
 import json
-# sjekk feilen her - M
-from config.databaseConnect import get_db_connection
+from backend.config.databaseConnect import get_db_connection
+
 
 # Connect to Redis
 redis_host = 'redis'
