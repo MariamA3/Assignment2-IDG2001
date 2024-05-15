@@ -2,7 +2,10 @@ import time
 import redis
 import json
 
-redis_client = redis.Redis(host='redis', port=6379)
+# Connect to Redis
+redis_host = 'redis'
+redis_port = 6379
+redis_client = redis.Redis(host=redis_host, port=redis_port)
 
 def process_likes():
     while True:
