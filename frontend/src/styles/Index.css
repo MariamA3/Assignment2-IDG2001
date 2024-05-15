@@ -18,13 +18,13 @@ body {
     --background-color: #1A1A1B; 
     --grey: #808080; 
     --white: #ffffff; 
-    --button-color: #FF4500; 
+    --button-color: #8B0000; 
 
     /* Dark theme colors */
     --background-color-dark: #1A1A1B; 
     --text-color-light: #ffffff;
     --dark-grey: #2B2B2B; 
     --input-background-dark: #2B2B2B;
-    --button-color-dark: #962902; 
+    --button-color-dark: #500000; 
     --button-hover-color-dark: #641a02; 
 }
