@@ -1,44 +1,38 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify
+from config.databaseConnect import db
+from models.models import Post
 
 # Create a Blueprint object for posts
 posts = Blueprint('posts', __name__)
 
-# Create a function to execute SQL queries
-def execute_query(query, params=None, commit=False):
-    # Access the database connection from the Flask app context
-    db_connection = current_app.config['DB_CONNECTION']
-
-    # Create a cursor object
-    cursor = db_connection.cursor()
-
-    # Execute SQL query
-    cursor.execute(query, params)
-
-    if commit:
-        # Commit changes to the database
-        db_connection.commit()
-        return
-
-    # Fetch all rows
-    data = cursor.fetchall()
-
-    # Close cursor (optional, Flask will handle connection closing)
-    cursor.close()
-
-    return data
-
 # GET all posts
 @posts.route('/posts', methods=['GET'])
 def get_posts():
-    posts_data = execute_query("SELECT * FROM posts")
-    return jsonify(posts_data)
+    posts_data = Post.query.all()
+    posts_list = [
+        {
+            'post_id': post.post_id,
+            'title': post.title,
+            'content': post.content,
+            'user_id': post.user_id,
+            'category_id': post.category_id
+        } for post in posts_data
+    ]
+    return jsonify(posts_list)
 
 # GET a specific post by ID
 @posts.route('/posts/<int:id>', methods=['GET'])
 def get_post(id):
-    post_data = execute_query("SELECT * FROM posts WHERE post_id = %s", (id,))
+    post_data = Post.query.get(id)
     if post_data:
-        return jsonify(post_data[0])
+        post = {
+            'post_id': post_data.post_id,
+            'title': post_data.title,
+            'content': post_data.content,
+            'user_id': post_data.user_id,
+            'category_id': post_data.category_id
+        }
+        return jsonify(post)
     return jsonify({'message': 'Post not found'}), 404
 
 # CREATE a new post
@@ -53,10 +47,9 @@ def create_post():
     if not title or not content or not user_id or not category_id:
         return jsonify({'message': 'Missing required fields'}), 400
 
-    execute_query("INSERT INTO posts (title, content, user_id, category_id) VALUES (%s, %s, %s, %s)", (title, content, user_id, category_id))
-    
-    # Commit the changes to the database
-    current_app.config['DB_CONNECTION'].commit()
+    new_post = Post(title=title, content=content, user_id=user_id, category_id=category_id)
+    db.session.add(new_post)
+    db.session.commit()
 
     return jsonify({'message': 'Post created successfully'}), 201
 
@@ -70,18 +63,24 @@ def update_post(id):
     if not title or not content:
         return jsonify({'message': 'Title and content are required for updating a post'}), 400
 
-    # Check if the post exists
-    post_data = execute_query("SELECT * FROM posts WHERE post_id = %s", (id,))
+    post_data = Post.query.get(id)
     if not post_data:
         return jsonify({'message': 'Post not found'}), 404
 
-    # Execute the SQL update query using title and content variables
-    execute_query("UPDATE posts SET title = %s, content = %s WHERE post_id = %s", (title, content, id), commit=True)
+    post_data.title = title
+    post_data.content = content
+    db.session.commit()
 
     return jsonify({'message': 'Post updated successfully'}), 200
 
 # DELETE a post by ID
 @posts.route('/posts/<int:id>', methods=['DELETE'])
 def delete_post(id):
-    execute_query("DELETE FROM posts WHERE post_id = %s", (id,), commit=True)
+    post_data = Post.query.get(id)
+    if not post_data:
+        return jsonify({'message': 'Post not found'}), 404
+
+    db.session.delete(post_data)
+    db.session.commit()
+
     return jsonify({'message': 'Post deleted'}), 200
