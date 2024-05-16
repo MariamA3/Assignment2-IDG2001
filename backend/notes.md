@@ -32,5 +32,5 @@ mysql -u username -p database_name < backup.sql
 
 # Routes
 
-http://127.0.0.1:4000/categories
-http://127.0.0.1:4000/categories/<int:id>
+http://127.0.0.1:4000/categories - GET, POST
+http://127.0.0.1:4000/categories/<int:id> - GET, PUT, DELETE
