@@ -1,0 +1,20 @@
+/* for the custom bullet points */
+ul {
+    list-style-type: none;
+}
+
+ul li {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+ul li::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-right: 10px;
+    background: url('../assets/bread.png') no-repeat;
+    background-size: contain;
+}
