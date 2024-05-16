@@ -28,3 +28,8 @@ body {
     --button-color-dark: #500000; 
     --button-hover-color-dark: #641a02; 
 }
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
