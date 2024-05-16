@@ -1,0 +1,103 @@
+.register-login-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 500px;
+    padding: 1.5rem 1rem;
+    margin: 30px auto;
+    background: var(--white);
+    color: var(--dark-grey);
+    border-radius: 10px;
+}
+
+.register-login-content {
+    text-align: center;
+    width: 100%;
+}
+
+.register-login-content p {
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.back-to-home-container {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-bottom: 1rem;
+}
+
+.register-login-wrapper h2 {
+    font-size: 1.8rem;
+    color: black;
+    margin-bottom: 1rem;
+}
+
+.register-login-wrapper div {
+    margin-bottom: 1.2rem;
+}
+
+.register-login-wrapper label,
+.register-login-wrapper input {
+    display: block;
+    margin: auto;
+}
+
+.register-login-wrapper label {
+    text-align: left;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.register-login-wrapper form input,
+.register-login-wrapper form select {
+    width: 85%;
+    outline: none;
+    border: 1px solid var(--grey);
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.register-login-wrapper form input:focus,
+.register-login-wrapper form select:focus {
+    border-color: var(--background-color-dark);
+}
+
+.register-login-wrapper button {
+    font-size: 1rem;
+    padding: 8px 0;
+    border-radius: 20px;
+    outline: none;
+    border: none;
+    width: 70%;
+    background: var(--button-color);
+    color: var(--white);
+    cursor: pointer;
+}
+
+.register-login-wrapper .back-to-home-btn {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    max-width: 100px;
+    border-radius: 20px;
+    outline: none;
+    color: var(--white);
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.register-login-wrapper .back-to-home-btn:hover,
+.register-login-wrapper .back-to-home-btn:active,
+.register-login-wrapper button:hover {
+    background: var(--button-color-dark);
+}
+
+@media (max-width: 600px) {
+    .register-wrapper {
+        padding: 1rem 0.5rem;
+    }
+}

@@ -1,0 +1,30 @@
+.layout-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+}
+
+.content-container {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+}
+
+.layout-sidebar {
+    width:100%;
+    border-right: 1px solid var(--white);
+}
+
+.main-content {
+    padding: 20px;
+}
+
+/* Styles for screens smaller than 600px (typical breakpoint for mobile devices) */
+@media (max-width: 600px) {
+    .content-container {
+        grid-template-columns: 1fr;
+    }
+
+    .main-content {
+        padding: 10px;
+    }
+}

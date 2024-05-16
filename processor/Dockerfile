@@ -25,4 +25,4 @@ COPY . .
 EXPOSE 5001
 
 # Define the command to run your app using Python 3
-CMD ["python3", "app.py"]
+CMD ["python3", "app.py && python3 processor.py"]

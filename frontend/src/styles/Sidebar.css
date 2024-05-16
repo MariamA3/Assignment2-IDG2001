@@ -1,0 +1,18 @@
+.sidebar {
+    background-color: var(--background-color);
+    position: sticky;
+    top: 51px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Styles for screens smaller than 600px */
+@media (max-width: 600px) {
+    .sidebar {
+        display: none;
+    }
+
+    .hamburger {
+        display: block;
+    }
+}
