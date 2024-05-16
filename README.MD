@@ -56,10 +56,24 @@ Assignment2-IDG2001/
 │
 │
 ├── backend/                 # Python backend
-│   ├── Dockerfile
-│   ├── app.py
-│   ├── requirements.txt
-│   └── ...
+│    ├── main.py
+│    ├── config/
+│    │   ├── databaseConnect.py
+│    ├── models/
+│    │   ├── models.py
+│    ├── routes/
+│    │   ├── categories.py
+│    │   ├── posts.py
+│    │   ├── users.py
+│    ├── schemas/
+│    │   ├── schemas.py
+│    ├── Dockerfile
+│    ├── requirements.txt
+│    ├── .env
+│    ├── README.md
+│    ├── populateDb.py
+│    ├── populateDb.py
+│    └── .gitignore
 │
 ├── nginx/                   # NGINX for load balancing
 │   ├── Dockerfile

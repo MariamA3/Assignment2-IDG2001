@@ -8,15 +8,14 @@ WORKDIR /app
 COPY . /app
 
 # Install any needed packages specified in requirements.txt
+# Explicitly use pip3 in case of multiple Python versions
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
 # Define environment variable
-ENV FLASK_APP=main.py
-ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=5000
+ENV NAME World
 
-# Use flask run to start the application
-CMD ["flask", "run"]
+# Explicitly use python3 to ensure the correct version is used
+CMD ["python3", "app.py"]

@@ -1,70 +1,41 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from sqlalchemy.exc import IntegrityError
+from config.databaseConnect import db
+from models.models import User
+from schemas.schemas import UserCreate, UserLogin
+from utils import hash_password, verify_password
 
-# Create a Blueprint object for users
 users = Blueprint('users', __name__)
 
-# Create a function to execute SQL queries
-def execute_query(query, params=None, commit=False):
-    # Access the database connection from the Flask app context
-    db_connection = current_app.config['DB_CONNECTION']
+@users.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    user_data = UserCreate(**data)
+    hashed_password = hash_password(user_data.password)
+    new_user = User(username=user_data.username, email=user_data.email, password=hashed_password)
+    try:
+        db.session.add(new_user)
+        db.session.commit()
+        return jsonify({"message": "User created successfully"}), 201
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({"message": "Username or email already exists"}), 400
 
-    # Create a cursor object
-    cursor = db_connection.cursor()
+@users.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    user_data = UserLogin(**data)
+    user = User.query.filter_by(username=user_data.username).first()
+    if user and verify_password(user_data.password, user.password):
+        access_token = create_access_token(identity=user.username)
+        return jsonify(access_token=access_token), 200
+    else:
+        return jsonify({"message": "Invalid credentials"}), 401
 
-    # Execute SQL query
-    cursor.execute(query, params)
-
-    if commit:
-        # Commit changes to the database
-        db_connection.commit()
-        return
-
-    # Fetch all rows
-    data = cursor.fetchall()
-
-    # Close cursor (optional, Flask will handle connection closing)
-    cursor.close()
-
-    return data
-
-# GET all users
-@users.route('/users', methods=['GET'])
-def get_users():
-    users_data = execute_query("SELECT * FROM users")
-    return jsonify(users_data)
-
-# GET a specific user by ID
-@users.route('/users/<int:id>', methods=['GET'])
-def get_user(id):
-    user_data = execute_query("SELECT * FROM users WHERE user_id = %s", (id,))
-    if user_data:
-        return jsonify(user_data[0])
-    return jsonify({'message': 'User not found'}), 404
-
-# UPDATE an existing user by ID
-@users.route('/users/<int:id>', methods=['PUT'])
-def update_user(id):
-    data = request.json
-    username = data.get('username')
-    email = data.get('email')
-
-    if not username or not email:
-        return jsonify({'message': 'Missing required fields: username and email'}), 400
-
-    # Check if the user exists
-    user_data = execute_query("SELECT * FROM users WHERE user_id = %s", (id,))
-    if not user_data:
-        return jsonify({'message': 'User not found'}), 404
-
-    # Execute the SQL update query using username and email variables
-    execute_query("UPDATE users SET username = %s, email = %s WHERE user_id = %s", (username, email, id), commit=True)
-
-    return jsonify({'message': 'User updated successfully'}), 200
-
-# DELETE a user by ID
-## This wont work because the user ID is used as a foreign key in the posts and likes table (referential integrity)
-# Might have to look into a fix for this in the future if neccesary
-@users.route('/users/<int:id>', methods=['DELETE'])
-def delete_user(id):
-    execute_query("DELETE FROM users WHERE user_id = %s", (id,), commit=True)
-    return jsonify({'message': 'User deleted'}), 200
+@users.route('/profile', methods=['GET'])
+@jwt_required()
+def profile():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first_or_404()
+    return jsonify(username=user.username, email=user.email), 200
