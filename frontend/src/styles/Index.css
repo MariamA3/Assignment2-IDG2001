@@ -18,15 +18,15 @@ body {
     --background-color: #1A1A1B; 
     --grey: #808080; 
     --white: #ffffff; 
-    --button-color: #8B0000; 
+    --button-color: #fea004; 
 
     /* Dark theme colors */
     --background-color-dark: #1A1A1B; 
     --text-color-light: #ffffff;
     --dark-grey: #2B2B2B; 
     --input-background-dark: #2B2B2B;
-    --button-color-dark: #500000; 
-    --button-hover-color-dark: #641a02; 
+    --button-color-dark:  #ad7111; 
+
 }
 
 h1 {

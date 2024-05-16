@@ -75,7 +75,6 @@
     border: none;
     width: 70%;
     background: var(--button-color);
-    color: var(--white);
     cursor: pointer;
 }
 
@@ -85,7 +84,6 @@
     max-width: 100px;
     border-radius: 20px;
     outline: none;
-    color: var(--white);
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
 }
