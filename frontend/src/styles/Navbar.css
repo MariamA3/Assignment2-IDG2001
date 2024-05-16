@@ -1,0 +1,14 @@
+.navbar {
+    background-color: var(--background-color);
+    position: sticky;
+    top: 0;
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid var(--white);
+    justify-content: space-between;
+    height: 50px;
+}
+
+.navbar a:visited {
+    color: var(--white);
+}
