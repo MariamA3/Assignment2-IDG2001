@@ -3,6 +3,8 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+# Legger denne inn for å importere redis modulen, her kan man legge inn 
+from redis_cache import RedisCache
 import os
 
 # Load environment variables from the .env file
@@ -19,6 +21,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Example additional confi
 # Initialize extensions with the app
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
+
+# Initialize RedisCache instance ----
+redis_cache = RedisCache()
 
 # Import database connection and models after config is set
 from config.databaseConnect import get_db_connection, db

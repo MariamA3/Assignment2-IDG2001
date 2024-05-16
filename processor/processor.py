@@ -1,7 +1,9 @@
 import time
 import redis
 import json
+
 from backend.config.databaseConnect import get_db_connection
+
 
 
 # Connect to Redis
