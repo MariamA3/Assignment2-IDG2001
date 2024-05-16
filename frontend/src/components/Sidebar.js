@@ -1,4 +1,5 @@
 import "../styles/Sidebar.css";
+import GetCategories from "./GetCategories";
 
 function Sidebar() {
     return (
@@ -6,6 +7,7 @@ function Sidebar() {
         <h2>Categories:</h2>
         {/* Add the fetching for categories here and display them let the user press a category and user will then 
         see all the posts in that category on the home page */}
+        <GetCategories /> 
         </aside>
     );
 }

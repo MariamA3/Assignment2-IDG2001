@@ -6,6 +6,12 @@
     padding: 20px;
 }
 
+.sidebar h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+
+}
+
 /* Styles for screens smaller than 600px */
 @media (max-width: 600px) {
     .sidebar {

@@ -8,6 +8,7 @@ function Home() {
             <p>Recent posts:</p>
             {/* Here vi can insert the posts for a category */}
             {/* I dont know which one we should show when the user first load*/}
+            {/* Maybe just have a recent posts that fetches the most recent post made */}
             <GetPosts />
         </div>
     );

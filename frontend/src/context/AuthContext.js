@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axiosInstance from "../api/axios";
-import LoadingIndicator from "../components/Loading";
 
 // Initialize the Authentication Context
 const AuthContext = createContext();
