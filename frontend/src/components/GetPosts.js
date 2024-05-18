@@ -1,71 +1,70 @@
 import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import axiosInstance from "../api/axios";
 import Loading from "./Loading";
+import plusIcon from "../assets/plus-icon.svg";
+import CreatePost from "./CreatePost";
 import "../styles/GetPosts.css";
-import { useParams } from "react-router-dom";
+import "../styles/Categories.css";
 
-// GetPosts component to fetch posts by category name and display 
-// them to the user when they press the categories on the sidebar
 function GetPosts() {
-  // Get the category name from the URL
   const { categoryName } = useParams();
   const [posts, setPosts] = useState([]);
+  const [categoryId, setCategoryId] = useState(null);
   const [likes, setLikes] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // Find the category ID by category name and then fetch the posts
   useEffect(() => {
     if (categoryName) {
-      // Set loading to true before starting to fetch data
       setLoading(true);
-      // Clear the previous set of posts when fetching again
-      setPosts([]); 
-      // Fetch the category by name
+      setPosts([]);
+
       axiosInstance
-        .get(`/categories/name/${encodeURIComponent(categoryName)}`)
+        .get(`/categories/name/${categoryName}`)
         .then((response) => {
           const category = response.data;
-          // Fetch the posts by category ID if the category is found
           if (category && category.category_id) {
+            setCategoryId(category.category_id);
+            console.log("Category ID: ", category.category_id);
             return axiosInstance.get(`/posts/category/${category.category_id}`);
           } else {
             throw new Error("Category not found or category ID is undefined");
           }
         })
-        // Set the posts to the state and stop loading
         .then((response) => {
-          if (response.data) {
-            setPosts(
-              Array.isArray(response.data) ? response.data : [response.data]
-            );
-          } else {
-            // Set posts to an empty array if no posts are found
-            setPosts([]);
+          if (Array.isArray(response.data) && response.data.length === 0) {
+            throw new Error("No posts found for this category");
           }
+          setPosts(
+            Array.isArray(response.data) ? response.data : [response.data]
+          );
           setLoading(false);
         })
         .catch((error) => {
-          // Log the error and stop loading even if an error occurs (Or infinite loading will occur)
-          console.error("Error fetching data: ", error);
+          if (error.response && error.response.status === 404) {
+            console.error("Category not found");
+          } else {
+            console.error("Error fetching data: ", error);
+          }
           setLoading(false);
         });
     }
   }, [categoryName]);
 
-  // We need to add some functionality for liking posts
-  // Will look at it later
   const handleLike = (postId) => {
     setLikes({ ...likes, [postId]: (likes[postId] || 0) + 1 });
   };
 
-  // Display loading screen while fetching data
   if (loading) {
     return <Loading />;
   }
 
-  // Display a message if no posts are found
   if (posts.length === 0) {
-    return <div>No posts found for this category</div>;
+    return (
+      <div>
+        <div>No posts found under the category "{categoryName}"</div>
+      </div>
+    );
   }
 
   return (
@@ -76,7 +75,6 @@ function GetPosts() {
           <p className="post-content">Content: {post.content}</p>
           <p className="post-footer">Category: {post.category_id}</p>
           <p className="post-footer">Date: {post.date}</p>
-          {/* Add a like button to like the post we dont have that functionality yet */}
           <button
             onClick={() => handleLike(post.post_id)}
             className="like-button"
@@ -90,6 +88,21 @@ function GetPosts() {
           </button>
         </div>
       ))}
+      <div className="categories-link">
+        <Link
+          to={{
+            pathname: `/b/${categoryName}/post`,
+            state: { categoryId: categoryId }, 
+          }}
+        >
+          Create a post
+          <img
+            className="categories-icon"
+            src={plusIcon}
+            alt="A plus icon for creating a new post"
+          />
+        </Link>
+      </div>
     </div>
   );
 }
