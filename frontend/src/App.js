@@ -18,7 +18,7 @@ function App() {
           <Route path="/register" element={<Register />} />
 
           <Route path="/b/:categoryName" element={<Categories />} />
-          <Route path="/b/:categoryName/post/:categoryId" element={<CreatePost />} />
+          <Route path="/b/:categoryName/:categoryId" element={<CreatePost />} />
 
           <Route path="*" element={<NotFound />} />
         </Route>

@@ -37,7 +37,7 @@ function Categories() {
         <Link
           to={{
             // This is to send the category to the create post page using params
-            pathname: `/b/${categoryName}/post/${categoryId}`,
+            pathname: `/b/${categoryName}/${categoryId}`,
           }}
         >
           <img

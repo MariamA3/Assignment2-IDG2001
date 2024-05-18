@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../api/axios";
 import Loading from "./Loading";
+import GoBackButton from "./GoBack";
 import "../styles/CreatePost.css";
 
 function CreatePost() {
@@ -26,7 +27,6 @@ function CreatePost() {
       // Send POST request to create a new post
       await axiosInstance.post("/posts", post);
       setLoading(false);
-      
 
       // Clear the form fields after successful post creation
       setPost({
@@ -89,6 +89,8 @@ function CreatePost() {
           Create post
         </button>
       </label>
+
+      <GoBackButton>Go Back</GoBackButton>
     </div>
   );
 }
