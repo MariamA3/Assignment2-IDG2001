@@ -21,7 +21,7 @@ def get_posts():
     return jsonify(posts_list)
 
 # GET a specific post by ID
-@posts.route('/posts/<int:id>', methods=['GET'])
+@posts.route('/posts/id/<int:id>', methods=['GET'])
 def get_post(id):
     post_data = Post.query.get(id)
     if post_data:
@@ -34,6 +34,21 @@ def get_post(id):
         }
         return jsonify(post)
     return jsonify({'message': 'Post not found'}), 404
+
+# GET all posts for a specific category
+@posts.route('/posts/category/<int:category_id>', methods=['GET'])
+def get_posts_by_category(category_id):
+    post_data = Post.query.filter_by(category_id=category_id).all()
+    if post_data:
+        posts = [{
+            'post_id': post.post_id,
+            'title': post.title,
+            'content': post.content,
+            'user_id': post.user_id,
+            'category_id': post.category_id
+        } for post in post_data]
+        return jsonify(posts)
+    return jsonify({'message': 'No posts found for this category'}), 404
 
 # CREATE a new post
 @posts.route('/posts', methods=['POST'])

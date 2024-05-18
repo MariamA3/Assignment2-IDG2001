@@ -40,6 +40,19 @@ def get_category(id):
         return jsonify(category)
     return jsonify({'message': 'Category not found'}), 404
 
+@categories.route('/categories/name/<string:name>', methods=['GET'])
+def get_category_by_name(name):
+    category_data = Category.query.filter_by(name=name).first()
+    if not category_data:
+        return jsonify({'message': 'Category not found'}), 404
+
+    category_dict = {
+        'category_id': category_data.category_id,
+        'name': category_data.name
+    }
+
+    return jsonify(category_dict), 200
+
 # CREATE a new category, creates a new category with the specified name
 @categories.route('/categories', methods=['POST'])
 def create_category():

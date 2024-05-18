@@ -5,23 +5,24 @@
 }
 
 .content-container {
-    display: grid;
-    grid-template-columns: 200px 1fr;
+    display: flex;
 }
 
 .layout-sidebar {
-    width:100%;
+    width: 200px;
     border-right: 1px solid var(--white);
+    flex-direction: column;
 }
 
 .main-content {
+    flex: 1;
     padding: 20px;
 }
 
 /* Styles for screens smaller than 600px (typical breakpoint for mobile devices) */
 @media (max-width: 600px) {
     .content-container {
-        grid-template-columns: 1fr;
+        flex-direction: column;
     }
 
     .main-content {

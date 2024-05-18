@@ -24,9 +24,9 @@ function Navbar() {
       <div className="right-section">
         {/* User can log in the idea is that the user has to log in to post something for a category */}
         {/* Should probably allow the user to go to a profile page if they're logged in */}
-        <p>
-          <Link to="/login" className="login-button">Login</Link>
-        </p>
+        <Link to="/login" className="login-button">
+          Login
+        </Link>
       </div>
     </nav>
   );
