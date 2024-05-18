@@ -18,3 +18,12 @@ ul li::before {
     background: url('../assets/bread.png') no-repeat;
     background-size: contain;
 }
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

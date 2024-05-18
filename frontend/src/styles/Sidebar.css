@@ -1,15 +1,39 @@
 .sidebar {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: var(--background-color);
     position: sticky;
     top: 56.8px;
     text-align: center;
     padding: 20px;
+    height: calc(100vh - 56.8px);
+    overflow-y: auto;
 }
 
 .sidebar h2 {
     font-size: 24px;
     margin-bottom: 10px;
+}
 
+.logout-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--button-color);
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background-color: var(--button-color-dark);
+    text-decoration: underline;
+}
+
+.bottom-container {
+    margin-top: auto;
 }
 
 /* Styles for screens smaller than 600px */

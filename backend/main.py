@@ -11,7 +11,7 @@ load_dotenv()
 
 # Create a Flask application instance
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 
 # Manually set configuration using environment variables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MYSQL_URL')

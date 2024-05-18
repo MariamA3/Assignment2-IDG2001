@@ -1,45 +1,89 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axiosInstance from "../api/axios";
+import Loading from "./Loading";
 import "../styles/GetPosts.css";
+import "../styles/Categories.css";
 
 function GetPosts() {
-  const [likes, setLikes] = useState(0);
+  const { categoryName } = useParams();
+  const [posts, setPosts] = useState([]);
+  const [likes, setLikes] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  /* Just for styling and testing the frontend */
-  const handleLike = () => {
-    setLikes(likes + 1);
+  useEffect(() => {
+    if (categoryName) {
+      setLoading(true);
+      setPosts([]);
+
+      axiosInstance
+        .get(`/categories/name/${categoryName}`)
+        .then((response) => {
+          const category = response.data;
+          if (category && category.category_id) {
+            return axiosInstance.get(`/posts/category/${category.category_id}`);
+          } else {
+            throw new Error("Category not found or category ID is undefined");
+          }
+        })
+        .then((response) => {
+          if (Array.isArray(response.data) && response.data.length === 0) {
+            throw new Error("No posts found for this category");
+          }
+          setPosts(
+            Array.isArray(response.data) ? response.data : [response.data]
+          );
+          setLoading(false);
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 404) {
+            console.error("Category not found");
+          } else {
+            console.error("Error fetching data: ", error);
+          }
+          setLoading(false);
+        });
+    }
+  }, [categoryName]);
+
+  const handleLike = (postId) => {
+    setLikes({ ...likes, [postId]: (likes[postId] || 0) + 1 });
   };
 
-  /* Posts should be dynamically fetched from the database and filtered by category  */
-  return (
-    <>
-      <div className="post-container">
-        <h1 className="post-title">Title: why dogs are the best</h1>
-        <p className="post-content">
-          Content: dogs are the best because they are always happy
-        </p>
-        <p className="post-footer">Category: dogs</p>
-        <p className="post-footer">Date: 15/05/2024</p>
-        {/* We need to add logic for handling likes */}
-        <button onClick={handleLike} className="like-button">
-          <span>Like</span>
-          <span>{likes === 1 ? "1 like" : `${likes} likes`}</span>{" "}
-        </button>
-      </div>
+  if (loading) {
+    return <Loading />;
+  }
 
-      <div className="post-container">
-        <h1 className="post-title">Title: why cats are the best</h1>
-        <p className="post-content">
-          Content: cats are the best because they are always calm
-        </p>
-        <p className="post-footer">Category: cats</p>
-        <p className="post-footer">Date: 16/05/2024</p>
-        {/* We need to add logic for handling likes */}
-        <button onClick={handleLike} className="like-button">
-          <span>Like</span>
-          <span>{likes === 1 ? "1 like" : `${likes} likes`}</span>
-        </button>
+  if (posts.length === 0) {
+    return (
+      <div>
+        <div>No posts found under the category "{categoryName}"</div>
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div>
+      {posts.map((post) => (
+        <div key={post.post_id} className="post-container">
+          <h2 className="post-title">Title: {post.title}</h2>
+          <p className="post-content">Content: {post.content}</p>
+          <p className="post-footer">Category: {post.category_id}</p>
+          <p className="post-footer">Date: {post.date}</p>
+          <button
+            onClick={() => handleLike(post.post_id)}
+            className="like-button"
+          >
+            <span>Like</span>
+            <span>
+              {likes[post.post_id] === 1
+                ? "1 like"
+                : `${likes[post.post_id] || 0} likes`}
+            </span>
+          </button>
+        </div>
+      ))}
+    </div>
   );
 }
 

@@ -1,0 +1,47 @@
+.create-post {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.create-post h2 {
+    font-size: 24px;
+}
+
+.create-post-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.create-post-content-wrapper input,
+.create-post-content-wrapper textarea {
+    padding: 10px;
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+}
+
+.create-post-content-wrapper textarea {
+    height: 200px;
+    resize: vertical;
+}
+
+.create-post-content-wrapper button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--button-color);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.create-post-content-wrapper button:hover {
+    background-color: var(--button-color-dark);
+    text-decoration: underline;
+}
