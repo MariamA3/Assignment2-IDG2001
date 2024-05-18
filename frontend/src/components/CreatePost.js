@@ -1,40 +1,47 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "../api/axios";
+import Loading from "./Loading";
 import "../styles/CreatePost.css";
 
-function CreatePost(props) {
-  const categoryId = props.categoryId;
+function CreatePost() {
+  const categoryId = useParams().categoryId;
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  console.log("categoryId", categoryId);
 
   // Define state for post
   const [post, setPost] = useState({
     title: "",
     content: "",
+    // Set the user_id to 1 for now when user creating in backend is
+    // finished we can make this dynamic and change based on the user that is logged in
     user_id: 1,
     category_id: categoryId,
   });
 
+  // Function to handle adding a new post
   const handleAddPost = async () => {
+    setLoading(true);
     try {
       // Send POST request to create a new post
       await axiosInstance.post("/posts", post);
+      setLoading(false);
+      
 
       // Clear the form fields after successful post creation
       setPost({
         title: "",
         content: "",
         user_id: 1, // Resetting user_id if needed
-        category_id: categoryId,
       });
 
       // Redirect the user to a specific page after successful post creation
       // For example, you can redirect them back to the list of posts
-      navigate(-1)
+      navigate(-1);
     } catch (error) {
+      // Log the error and stop loading even if an error occurs (Or infinite loading will occur)
       console.error("Failed to create post:", error);
+      setLoading(false);
     }
   };
 
@@ -47,6 +54,10 @@ function CreatePost(props) {
       [name]: value,
     }));
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="create-post">
@@ -74,7 +85,9 @@ function CreatePost(props) {
       </label>
 
       <label className="create-post-content-wrapper">
-        <button type="submit" onClick={handleAddPost}>Create post</button>
+        <button type="submit" onClick={handleAddPost}>
+          Create post
+        </button>
       </label>
     </div>
   );

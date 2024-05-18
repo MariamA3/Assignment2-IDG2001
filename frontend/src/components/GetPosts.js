@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axiosInstance from "../api/axios";
 import Loading from "./Loading";
-import plusIcon from "../assets/plus-icon.svg";
-import CreatePost from "./CreatePost";
 import "../styles/GetPosts.css";
 import "../styles/Categories.css";
 
 function GetPosts() {
   const { categoryName } = useParams();
   const [posts, setPosts] = useState([]);
-  const [categoryId, setCategoryId] = useState(null);
   const [likes, setLikes] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -24,8 +21,6 @@ function GetPosts() {
         .then((response) => {
           const category = response.data;
           if (category && category.category_id) {
-            setCategoryId(category.category_id);
-            console.log("Category ID: ", category.category_id);
             return axiosInstance.get(`/posts/category/${category.category_id}`);
           } else {
             throw new Error("Category not found or category ID is undefined");
@@ -88,21 +83,6 @@ function GetPosts() {
           </button>
         </div>
       ))}
-      <div className="categories-link">
-        <Link
-          to={{
-            pathname: `/b/${categoryName}/post`,
-            state: { categoryId: categoryId }, 
-          }}
-        >
-          Create a post
-          <img
-            className="categories-icon"
-            src={plusIcon}
-            alt="A plus icon for creating a new post"
-          />
-        </Link>
-      </div>
     </div>
   );
 }
