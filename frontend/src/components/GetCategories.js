@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import axiosInstance from "../api/axios";
 import "../styles/GetCategories.css";
 
 function GetCategories() {
-  const { category_id } = useParams();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
