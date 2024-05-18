@@ -3,7 +3,7 @@ import Home from "./pages/Home";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import GetPosts from "./components/GetPosts";
+import Categories from "./pages/Categories";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          <Route path="/b/:categoryName" element={<GetPosts />} />
+          <Route path="/b/:categoryName" element={<Categories />} />
         </Route>
       </Routes>
     </>

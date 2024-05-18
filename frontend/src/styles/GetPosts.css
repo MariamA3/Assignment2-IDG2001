@@ -1,11 +1,14 @@
 .post-container {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     border: 1px solid var(--white);
     margin-bottom: 20px;
     padding: 20px;
+    margin: 20px;
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    max-width: 600px;
 }
 
 .post-title {
@@ -56,4 +59,11 @@
 .like-button span:last-child {
     font-size: 14px;
     color: var(--white);
+}
+
+@media (max-width: 600px) {
+    .post-container {
+        margin: 0;
+        margin-bottom: 20px;
+    }
 }
