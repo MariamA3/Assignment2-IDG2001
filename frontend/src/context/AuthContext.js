@@ -14,6 +14,7 @@ export function useAuth() {
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // Effect to verify user's session on component mount
   useEffect(() => {
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }) => {
         const response = await axiosInstance.get("/profile");
         // If verification is successful, set the current user
         setCurrentUser(response.data);
+        setIsAuthenticated(true);
       } catch (error) {
         // Log and handle any verification error
         console.error("Session verification failed:", error);
@@ -34,7 +36,14 @@ export const AuthProvider = ({ children }) => {
     };
 
     verifySession();
-  }, []);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      console.log("Current user:", currentUser);
+      console.log("Authenticated:", isAuthenticated);
+    }
+  }, [currentUser, isAuthenticated, isLoading]);
 
   // Function to handle user login
   const login = async ({ username, password }) => {
@@ -43,8 +52,9 @@ export const AuthProvider = ({ children }) => {
         username,
         password,
       });
-      // On successful login, update the current user state
+      // On successful login, update the current user and authentication state
       setCurrentUser(response.data.data);
+      setIsAuthenticated(true);
     } catch (error) {
       // Handle login errors and log them
       const errorMessage =
@@ -57,19 +67,25 @@ export const AuthProvider = ({ children }) => {
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) return parts.pop().split(";").shift();
   }
 
   // Function to handle user logout
   const logout = async () => {
     try {
-      await axiosInstance.post("/logout", {}, {
-        headers: {
-          'X-CSRF-TOKEN': getCookie('csrf_access_token') // replace 'csrf_access_token' with the name of your CSRF cookie if it's different
-        },
-        withCredentials: true
-      });
+      await axiosInstance.post(
+        "/logout",
+        {},
+        {
+          headers: {
+            "X-CSRF-TOKEN": getCookie("csrf_access_token"), // replace 'csrf_access_token' with the name of your CSRF cookie if it's different
+          },
+          withCredentials: true,
+        }
+      );
+      // On successful logout, update the current user and authentication state
       setCurrentUser(null);
+      setIsAuthenticated(false);
     } catch (error) {
       // Handle logout errors and log them
       const errorMessage = "Error logging out. Please try again.";
@@ -80,7 +96,7 @@ export const AuthProvider = ({ children }) => {
   // Values to be provided through the context
   const value = {
     currentUser,
-    isAuthenticated: !!currentUser,
+    isAuthenticated,
     isLoading,
     login,
     logout,

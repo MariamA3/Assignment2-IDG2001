@@ -46,7 +46,7 @@ def login():
 def profile():
    current_user = get_jwt_identity()
    user = User.query.filter_by(username=current_user).first_or_404()
-   return jsonify(username=user.username, email=user.email), 200
+   return jsonify(username=user.username, email=user.email, user_id=user.user_id), 200
 
 @users.route('/logout', methods=['POST'])
 @jwt_required()

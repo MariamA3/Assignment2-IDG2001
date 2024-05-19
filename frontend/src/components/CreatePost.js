@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import axiosInstance from "../api/axios";
 import Loading from "./Loading";
 import GoBackButton from "./GoBack";
@@ -7,16 +8,17 @@ import "../styles/CreatePost.css";
 
 function CreatePost() {
   const categoryId = useParams().categoryId;
+  const { currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  console.log(currentUser)
 
   // Define state for post
   const [post, setPost] = useState({
     title: "",
     content: "",
-    // Set the user_id to 1 for now when user creating in backend is
-    // finished we can make this dynamic and change based on the user that is logged in
-    user_id: 1,
+    user_id: currentUser.user_id,
     category_id: categoryId,
   });
 
@@ -32,7 +34,8 @@ function CreatePost() {
       setPost({
         title: "",
         content: "",
-        user_id: 1, // Resetting user_id if needed
+        user_id: "", 
+        category_id: "",
       });
 
       // Redirect the user to a specific page after successful post creation
