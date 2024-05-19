@@ -19,6 +19,7 @@ app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Example additional configuration
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']  # Set JWT token location to cookies
 app.config['JWT_ACCESS_COOKIE_NAME'] = 'access_token'  # Set JWT access cookie name to 'access_token'
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 
 # Initialize extensions with the app
 bcrypt = Bcrypt(app)

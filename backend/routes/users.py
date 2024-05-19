@@ -22,6 +22,8 @@ def register():
         db.session.rollback()
         return jsonify({"message": "Username or email already exists"}), 400
 
+from flask_jwt_extended import set_access_cookies, create_access_token
+
 @users.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -32,8 +34,8 @@ def login():
         # Create a response
         response = make_response(jsonify({"msg": "Login successful"}), 200)
 
-        # Set the access_token as a cookie in the response
-        response.set_cookie('access_token', access_token)
+        # Set the JWT cookies in the response
+        set_access_cookies(response, access_token)
 
         return response
     else:
@@ -44,9 +46,12 @@ def login():
 def profile():
    current_user = get_jwt_identity()
    user = User.query.filter_by(username=current_user).first_or_404()
-   return jsonify(username=user.username), 200
+   return jsonify(username=user.username, email=user.email), 200
 
 @users.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
-    return jsonify({"message": "Logged out successfully"}), 200
+    resp = make_response(jsonify({"message": "Logged out successfully"}))
+    resp.set_cookie('access_token', '', expires=0)
+    resp.set_cookie('csrf_access_token', '', expires=0)
+    return resp, 200

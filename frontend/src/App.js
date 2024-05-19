@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound";
 import Categories from "./pages/Categories";
 import CreatePost from "./components/CreatePost";
 import Profile from "./pages/Profile";
+import SecureRoute from "./components/AuthRoutes";
 
 function App() {
   return (
@@ -18,10 +19,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          <Route path="/profile" element={<Profile />} /> 
+          
 
           <Route path="/b/:categoryName" element={<Categories />} />
           <Route path="/b/:categoryName/:categoryId" element={<CreatePost />} />
+
+          <Route element={<SecureRoute />}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
 
           <Route path="*" element={<NotFound />} />
         </Route>

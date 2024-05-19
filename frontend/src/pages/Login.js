@@ -21,7 +21,7 @@ function Login() {
     if (!username || !password) {
       return false;
     }
-    
+
     return true;
   };
 
@@ -32,7 +32,8 @@ function Login() {
     setIsLoading(true); 
     try {
       await auth.login({ username, password }); 
-      navigate("/profile"); 
+      navigate("/"); 
+      console.log("Login successful")
     } catch (error) {
       console.error("Failed to login: ", error);
     } finally {

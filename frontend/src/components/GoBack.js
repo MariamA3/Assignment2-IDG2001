@@ -8,7 +8,7 @@ const GoBackButton = ({ children }) => {
 
   const handleGoBack = (event) => {
     event.preventDefault();
-    navigate(-1);
+    navigate("/");
   };
 
   return <button className="goBack" onClick={handleGoBack}>{children}</button>;

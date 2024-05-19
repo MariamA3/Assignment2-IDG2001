@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import userIcon from "../assets/user.svg";
 import logo from "../assets/bread.svg";
 import "../styles/Navbar.css";
 
 function Navbar() {
+  const { isAuthenticated } = useAuth();
   const location = useLocation();
 
   // Function to format the path
@@ -24,9 +26,15 @@ function Navbar() {
       <div className="right-section">
         {/* User can log in the idea is that the user has to log in to post something for a category */}
         {/* Should probably allow the user to go to a profile page if they're logged in */}
-        <Link to="/login" className="login-button">
-          Login
-        </Link>
+        {isAuthenticated ? (
+          <Link to="/profile">
+            <img src={userIcon} alt="User icon" />
+          </Link>
+        ) : (
+          <Link to="/login" className="login-button">
+            Login
+          </Link>
+        )}
       </div>
     </nav>
   );

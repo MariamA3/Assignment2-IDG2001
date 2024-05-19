@@ -54,10 +54,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
   // Function to handle user logout
   const logout = async () => {
     try {
-      await axiosInstance.post("/logout");
+      await axiosInstance.post("/logout", {}, {
+        headers: {
+          'X-CSRF-TOKEN': getCookie('csrf_access_token') // replace 'csrf_access_token' with the name of your CSRF cookie if it's different
+        },
+        withCredentials: true
+      });
       setCurrentUser(null);
     } catch (error) {
       // Handle logout errors and log them
