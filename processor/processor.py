@@ -1,10 +1,7 @@
 import time
 import redis
 import json
-
 from backend.config.databaseConnect import get_db_connection
-
-
 
 # Connect to Redis
 redis_host = 'redis'
@@ -13,6 +10,7 @@ redis_client = redis.Redis(host=redis_host, port=redis_port)
 
 # Get database connection
 db_connection = get_db_connection()
+
 
 def process_likes():
     while True:

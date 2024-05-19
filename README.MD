@@ -122,7 +122,15 @@ database is used to store user data, post information, and other relevant data. 
 - login system med autentisering
 
 ## Mariam
-- cache, load balancer og like batching
+- cache: Lagt in instance for redis i main.py, må finne ut om disse skal inn i categories, posts, og users.   
+ Set data in the cache
+redis_cache.set_data('my_key', 'my_value')
+ Retrieve data from the cache
+data = redis_cache.get_data('my_key')
+print(data)  # Output: b'my_value'
+
+
+ load balancer og like batching.
 
 ## Sebastian
 - api endpinits for å hente data fra databasen
