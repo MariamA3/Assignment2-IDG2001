@@ -37,10 +37,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Function to handle user login
-  const login = async ({ email, password }) => {
+  const login = async ({ username, password }) => {
     try {
       const response = await axiosInstance.post("/login", {
-        email,
+        username,
         password,
       });
       // On successful login, update the current user state

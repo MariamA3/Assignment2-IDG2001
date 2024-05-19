@@ -11,12 +11,14 @@ load_dotenv()
 
 # Create a Flask application instance
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 # Manually set configuration using environment variables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MYSQL_URL')
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Example additional configuration
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']  # Set JWT token location to cookies
+app.config['JWT_ACCESS_COOKIE_NAME'] = 'access_token'  # Set JWT access cookie name to 'access_token'
 
 # Initialize extensions with the app
 bcrypt = Bcrypt(app)

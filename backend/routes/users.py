@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from sqlalchemy.exc import IntegrityError
 from config.databaseConnect import db
@@ -29,16 +29,22 @@ def login():
     user = User.query.filter_by(username=user_data.username).first()
     if user and verify_password(user_data.password, user.password):
         access_token = create_access_token(identity=user.username)
-        return jsonify(access_token=access_token), 200
+        # Create a response
+        response = make_response(jsonify({"msg": "Login successful"}), 200)
+
+        # Set the access_token as a cookie in the response
+        response.set_cookie('access_token', access_token)
+
+        return response
     else:
         return jsonify({"message": "Invalid credentials"}), 401
 
 @users.route('/profile', methods=['GET'])
 @jwt_required()
 def profile():
-    current_user = get_jwt_identity()
-    user = User.query.filter_by(username=current_user).first_or_404()
-    return jsonify(username=user.username, email=user.email), 200
+   current_user = get_jwt_identity()
+   user = User.query.filter_by(username=current_user).first_or_404()
+   return jsonify(username=user.username), 200
 
 @users.route('/logout', methods=['POST'])
 @jwt_required()

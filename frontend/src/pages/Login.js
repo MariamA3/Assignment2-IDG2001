@@ -5,7 +5,7 @@ import "../styles/Auth.css";
 
 // I have comment out some functionality will be implemented when we have a working backends
 function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false); 
   const auth = useAuth();
@@ -13,17 +13,15 @@ function Login() {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "email") setEmail(value);
+    if (name === "username") setUsername(value);
     if (name === "password") setPassword(value);
   };
 
   const validateInputs = () => {
-    if (!email || !password) {
+    if (!username || !password) {
       return false;
     }
-    if (!email.includes("@")) {
-      return false;
-    }
+    
     return true;
   };
 
@@ -33,7 +31,7 @@ function Login() {
 
     setIsLoading(true); 
     try {
-      await auth.login({ email, password }); 
+      await auth.login({ username, password }); 
       navigate("/profile"); 
     } catch (error) {
       console.error("Failed to login: ", error);
@@ -53,14 +51,14 @@ function Login() {
         <h2>Login</h2>
         <form onSubmit={handleSubmit} noValidate>
           <div>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="username">Username</label>
             <input
-              id="email"
-              type="email"
-              name="email"
-              value={email}
+              id="username"
+              type="username"
+              name="username"
+              value={username}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               required
             />
           </div>
