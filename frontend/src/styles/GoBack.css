@@ -8,7 +8,7 @@
     cursor: pointer;
 }
 
-.goBack button:hover {
+.goBack:hover {
     background-color: var(--button-color-dark);
     text-decoration: underline;
 }

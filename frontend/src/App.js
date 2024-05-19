@@ -6,6 +6,7 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import Categories from "./pages/Categories";
 import CreatePost from "./components/CreatePost";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+
+          <Route path="/profile" element={<Profile />} /> 
 
           <Route path="/b/:categoryName" element={<Categories />} />
           <Route path="/b/:categoryName/:categoryId" element={<CreatePost />} />

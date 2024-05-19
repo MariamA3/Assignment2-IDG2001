@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axiosInstance from "../api/axios";
+import Loading from "../components/Loading";
 
 // Initialize the Authentication Context
 const AuthContext = createContext();
@@ -12,6 +13,7 @@ export function useAuth() {
 // The provider component manages the authentication state and provides it to child components
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Effect to verify user's session on component mount
   useEffect(() => {
@@ -19,7 +21,7 @@ export const AuthProvider = ({ children }) => {
     const verifySession = async () => {
       setIsLoading(true); // Begin loading state
       try {
-        const response = await axiosInstance.get("/api/auth/verify");
+        const response = await axiosInstance.get("/profile");
         // If verification is successful, set the current user
         setCurrentUser(response.data);
       } catch (error) {
@@ -37,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   // Function to handle user login
   const login = async ({ email, password }) => {
     try {
-      const response = await axiosInstance.post("/api/auth/login", {
+      const response = await axiosInstance.post("/login", {
         email,
         password,
       });
@@ -55,8 +57,8 @@ export const AuthProvider = ({ children }) => {
   // Function to handle user logout
   const logout = async () => {
     try {
-      await axiosInstance.post("/api/auth/logout");
-      setCurrentUser(null); 
+      await axiosInstance.post("/logout");
+      setCurrentUser(null);
     } catch (error) {
       // Handle logout errors and log them
       const errorMessage = "Error logging out. Please try again.";
@@ -67,7 +69,8 @@ export const AuthProvider = ({ children }) => {
   // Values to be provided through the context
   const value = {
     currentUser,
-    isAuthenticated: !!currentUser, 
+    isAuthenticated: !!currentUser,
+    isLoading,
     login,
     logout,
   };
@@ -75,7 +78,7 @@ export const AuthProvider = ({ children }) => {
   // Conditionally render children or a loading indicator based on the loading state
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      {isLoading ? <Loading /> : children}
     </AuthContext.Provider>
   );
 };

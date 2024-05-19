@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Auth.css";
 
 // I have comment out some functionality will be implemented when we have a working backends
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  /*
   const [isLoading, setIsLoading] = useState(false); 
-  */
+  const auth = useAuth();
   const navigate = useNavigate(); 
 
   const handleChange = (event) => {
@@ -17,7 +17,6 @@ function Login() {
     if (name === "password") setPassword(value);
   };
 
-  /*
   const validateInputs = () => {
     if (!email || !password) {
       return false;
@@ -27,9 +26,7 @@ function Login() {
     }
     return true;
   };
-  */
 
-  /*
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateInputs()) return; 
@@ -37,17 +34,13 @@ function Login() {
     setIsLoading(true); 
     try {
       await auth.login({ email, password }); 
-      toast.success("Logged in successfully.");
-      navigate("/dashboard"); 
+      navigate("/profile"); 
     } catch (error) {
-      toast.error(
-        "Login failed. Please check if your email or password is correct."
-      );
+      console.error("Failed to login: ", error);
     } finally {
       setIsLoading(false); 
     }
   };
-  */
 
   return (
     <div className="register-login-wrapper">
@@ -58,7 +51,7 @@ function Login() {
       </div>
       <div className="register-login-content">
         <h2>Login</h2>
-        <form noValidate>
+        <form onSubmit={handleSubmit} noValidate>
           <div>
             <label htmlFor="email">Email</label>
             <input
@@ -84,7 +77,9 @@ function Login() {
             />
           </div>
 
-          <button type="submit">Login</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Login"}
+          </button>
         </form>
         <p>
           Don't have an account? <Link to="/register">Register here</Link>

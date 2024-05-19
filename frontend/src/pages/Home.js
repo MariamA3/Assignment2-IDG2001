@@ -1,4 +1,3 @@
-import GetPosts from "../components/GetPosts";
 import "../styles/Home.css";
 
 function Home() {
