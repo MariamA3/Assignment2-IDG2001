@@ -8,12 +8,12 @@ button {
     width: 100%;
     background: #B22222;
     cursor: pointer;
-  }
-  
-  button:hover {
+}
+
+button:hover {
     background-color: #901a1a;
     text-decoration: underline;
-  }
+}
 
 @media (max-width: 600px) {
     .profile-container h2 {

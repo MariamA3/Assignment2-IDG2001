@@ -34,6 +34,9 @@ from routes.categories import categories
 # Establish a database connection when the application starts
 get_db_connection(app)
 
+# Print a message to the console to confirm the connection
+print("Connected to the database!")
+
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)
 

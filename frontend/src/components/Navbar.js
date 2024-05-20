@@ -5,7 +5,7 @@ import logo from "../assets/bread.svg";
 import "../styles/Navbar.css";
 
 function Navbar() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, currentUser } = useAuth();
   const location = useLocation();
 
   // Function to format the path
@@ -27,7 +27,7 @@ function Navbar() {
         {/* User can log in the idea is that the user has to log in to post something for a category */}
         {/* Should probably allow the user to go to a profile page if they're logged in */}
         {isAuthenticated ? (
-          <Link to="/profile">
+          <Link to={`/u/${currentUser.username}`}>
             <img src={userIcon} alt="User icon" />
           </Link>
         ) : (
