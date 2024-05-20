@@ -11,12 +11,15 @@ load_dotenv()
 
 # Create a Flask application instance
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 # Manually set configuration using environment variables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MYSQL_URL')
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Example additional configuration
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']  # Set JWT token location to cookies
+app.config['JWT_ACCESS_COOKIE_NAME'] = 'access_token'  # Set JWT access cookie name to 'access_token'
+app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 
 # Initialize extensions with the app
 bcrypt = Bcrypt(app)
@@ -30,6 +33,9 @@ from routes.categories import categories
 
 # Establish a database connection when the application starts
 get_db_connection(app)
+
+# Print a message to the console to confirm the connection
+print("Connected to the database!")
 
 # Initialize Flask-Migrate
 migrate = Migrate(app, db)

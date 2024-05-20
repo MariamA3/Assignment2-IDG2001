@@ -1,53 +1,45 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Auth.css";
 
 // I have comment out some functionality will be implemented when we have a working backends
 function Login() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  /*
   const [isLoading, setIsLoading] = useState(false); 
-  */
+  const auth = useAuth();
   const navigate = useNavigate(); 
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "email") setEmail(value);
+    if (name === "username") setUsername(value);
     if (name === "password") setPassword(value);
   };
 
-  /*
   const validateInputs = () => {
-    if (!email || !password) {
+    if (!username || !password) {
       return false;
     }
-    if (!email.includes("@")) {
-      return false;
-    }
+
     return true;
   };
-  */
 
-  /*
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!validateInputs()) return; 
 
     setIsLoading(true); 
     try {
-      await auth.login({ email, password }); 
-      toast.success("Logged in successfully.");
-      navigate("/dashboard"); 
+      await auth.login({ username, password }); 
+      navigate("/"); 
+      console.log("Login successful")
     } catch (error) {
-      toast.error(
-        "Login failed. Please check if your email or password is correct."
-      );
+      console.error("Failed to login: ", error);
     } finally {
       setIsLoading(false); 
     }
   };
-  */
 
   return (
     <div className="register-login-wrapper">
@@ -58,16 +50,16 @@ function Login() {
       </div>
       <div className="register-login-content">
         <h2>Login</h2>
-        <form noValidate>
+        <form onSubmit={handleSubmit} noValidate>
           <div>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="username">Username</label>
             <input
-              id="email"
-              type="email"
-              name="email"
-              value={email}
+              id="username"
+              type="username"
+              name="username"
+              value={username}
               onChange={handleChange}
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               required
             />
           </div>
@@ -84,7 +76,9 @@ function Login() {
             />
           </div>
 
-          <button type="submit">Login</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? "Logging in..." : "Login"}
+          </button>
         </form>
         <p>
           Don't have an account? <Link to="/register">Register here</Link>

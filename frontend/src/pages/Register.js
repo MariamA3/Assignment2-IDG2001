@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axiosInstance from "../api/axios";
 import "../styles/Auth.css";
 
-// I have comment out some functionality will be implemented when we have a working backend
+// For registering a new user
 function Register() {
   // State to hold form data for all fields
   const [formData, setFormData] = useState({
@@ -10,9 +11,9 @@ function Register() {
     email: "",
     password: "",
   });
-  /*
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  */
+
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -23,14 +24,9 @@ function Register() {
     }));
   };
 
-  /*
   const validateForm = () => {
     // Required fields check
-    if (
-      !formData.username ||
-      !formData.email ||
-      !formData.password ||
-    ) {
+    if (!formData.username || !formData.email || !formData.password) {
       return false;
     }
 
@@ -50,29 +46,25 @@ function Register() {
     if (!passwordPattern.test(formData.password)) {
       return false;
     }
-
     // If all checks pass
     return true;
   };
-  */
 
-  /*
   const handleSubmit = async (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
     if (!validateForm()) return;
 
-    setIsSubmitting(true); 
+    setIsSubmitting(true);
     try {
-      const response = await axiosInstance.post("/api/auth/register", formData);
-      navigate("/login"); 
+      const response = await axiosInstance.post("/register", formData);
+      console.log("Registration successful:", response.data);
+      navigate("/login");
     } catch (error) {
-      // Handle any errors from the registration attempt
-      toast.error(error.response?.data?.message || "Registration failed!");
+      console.error("Registration failed:", error);
     } finally {
       setIsSubmitting(false); // Reset submission status
     }
   };
-  */
 
   return (
     <div className="register-login-wrapper">
@@ -83,7 +75,7 @@ function Register() {
       </div>
       <div className="register-login-content">
         <h2>Register</h2>
-        <form noValidate>
+        <form onSubmit={handleSubmit} noValidate>
           <div>
             <label htmlFor="username">Username*</label>
             <input
@@ -120,7 +112,8 @@ function Register() {
               required
             />
           </div>
-          <button type="submit">Register
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Registering..." : "Register"}
           </button>
         </form>
         <p>
