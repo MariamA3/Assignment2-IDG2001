@@ -73,12 +73,13 @@ export const AuthProvider = ({ children }) => {
   // Function to handle user logout
   const logout = async () => {
     try {
+      // Fetch the crsf token from the cookie idk what it is but we need it to make this work
       await axiosInstance.post(
         "/logout",
         {},
         {
           headers: {
-            "X-CSRF-TOKEN": getCookie("csrf_access_token"), // replace 'csrf_access_token' with the name of your CSRF cookie if it's different
+            "X-CSRF-TOKEN": getCookie("csrf_access_token"), 
           },
           withCredentials: true,
         }
@@ -100,6 +101,7 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     login,
     logout,
+    getCookie,
   };
 
   // Conditionally render children or a loading indicator based on the loading state

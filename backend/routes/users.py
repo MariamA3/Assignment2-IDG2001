@@ -60,3 +60,16 @@ def logout():
 def get_user(username):
     user = User.query.filter_by(username=username).first_or_404()
     return jsonify(username=user.username, email=user.email, user_id=user.user_id), 200
+
+@users.route('/users/<username>', methods=['DELETE'])
+@jwt_required()
+def delete_user(username):
+    current_user = get_jwt_identity()
+    if current_user != username:
+        return jsonify({"message": "Cannot delete other user's account"}), 403
+
+    user = User.query.filter_by(username=username).first_or_404()
+    db.session.delete(user)
+    db.session.commit()
+
+    return jsonify({"message": "User deleted successfully"}), 200
