@@ -14,8 +14,6 @@ load_dotenv()
 # Initialize SQLAlchemy
 db = SQLAlchemy()
 
-# Gotta fix this somehow, when try to import database, it doesnt work, so having db 
-#connection here is the only way it works for some reason.
 
 # Set up database connection
 def setup_db_connection(app):
