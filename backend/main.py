@@ -4,6 +4,8 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_cors import CORS
 from dotenv import load_dotenv
+# Legger denne inn for å importere redis modulen, her kan man legge inn 
+from redis_cache import RedisCache
 import os
 
 # Load environment variables from the .env file
@@ -24,6 +26,9 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 # Initialize extensions with the app
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
+
+# Initialize RedisCache instance ----
+redis_cache = RedisCache()
 
 # Import database connection and models after config is set
 from config.databaseConnect import get_db_connection, db
