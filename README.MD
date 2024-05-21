@@ -122,7 +122,10 @@ database is used to store user data, post information, and other relevant data. 
 - login system med autentisering
 
 ## Mariam
-- cache, load balancer og like batching
+- cache, load balancer og like batching 
+- Gotta fix this somehow, when try to import database, it doesnt work, so having db connection here is the only way it works for some reason.
+
+
 
 ## Sebastian
 - api endpinits for å hente data fra databasen
