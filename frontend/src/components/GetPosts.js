@@ -14,12 +14,12 @@ function GetPosts() {
   useEffect(() => {
     if (categoryName) {
       setLoading(true);
-      setPosts([]);
 
       axiosInstance
         .get(`/categories/name/${categoryName}`)
         .then((response) => {
           const category = response.data;
+          console.log("Fetched category:", category); // Debug log
           if (category && category.category_id) {
             return axiosInstance.get(`/posts/category/${category.category_id}`);
           } else {
@@ -27,21 +27,46 @@ function GetPosts() {
           }
         })
         .then((response) => {
-          if (Array.isArray(response.data) && response.data.length === 0) {
+          const posts = response.data;
+          console.log("Fetched posts:", posts); // Debug log
+          if (Array.isArray(posts) && posts.length > 0) {
+            const postPromises = posts.map((post) =>
+              axiosInstance
+                .get(`/users/${post.user_id}`)
+                .then((userResponse) => {
+                  return { ...post, username: userResponse.data.username };
+                })
+                .catch((error) => {
+                  if (error.response && error.response.status === 404) {
+                    console.error(`User with ID ${post.user_id} not found`);
+                    return { ...post, username: "User not found" };
+                  } else {
+                    console.error("Error fetching user data:", error.message);
+                    return { ...post, username: "Error fetching user" };
+                  }
+                })
+            );
+            return Promise.all(postPromises);
+          } else {
             throw new Error("No posts found for this category");
           }
-          setPosts(
-            Array.isArray(response.data) ? response.data : [response.data]
-          );
-          setLoading(false);
+        })
+        .then((postsWithUsernames) => {
+          console.log("Posts with usernames:", postsWithUsernames);
+          setPosts(postsWithUsernames);
         })
         .catch((error) => {
           if (error.response && error.response.status === 404) {
             console.error("Category not found");
           } else {
-            console.error("Error fetching data: ", error);
+            console.error("Error fetching data:", error.message);
           }
-          setLoading(false);
+          // Clear posts if an error occurs
+          setPosts([]); 
+        })
+        .finally(() => {
+          // Ensure loading is set to false even if an error occurs
+          setLoading(false); 
         });
     }
   }, [categoryName]);
@@ -70,6 +95,7 @@ function GetPosts() {
           <p className="post-content">Content: {post.content}</p>
           <p className="post-footer">Category: {post.category_id}</p>
           <p className="post-footer">Date: {post.date}</p>
+          <p className="post-footer">Posted by: {post.username}</p>
           <button
             onClick={() => handleLike(post.post_id)}
             className="like-button"

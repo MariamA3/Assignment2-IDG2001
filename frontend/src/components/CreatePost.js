@@ -12,8 +12,6 @@ function CreatePost() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  console.log(currentUser)
-
   // Define state for post
   const [post, setPost] = useState({
     title: "",

@@ -17,10 +17,12 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <div className="left-section">
-        <img src={logo} alt="A piece of bread" />
-        <h1>Breadit</h1>
-      </div>
+      <Link to="/">
+        <div className="left-section">
+          <img src={logo} alt="A piece of bread" />
+          <h1>Breadit</h1>
+        </div>
+      </Link>
 
       <h2>{formatPath(location.pathname)}</h2>
       <div className="right-section">
