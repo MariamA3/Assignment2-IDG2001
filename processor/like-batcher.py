@@ -14,7 +14,6 @@ load_dotenv()
 # Initialize SQLAlchemy
 db = SQLAlchemy()
 
-
 # Set up database connection
 def setup_db_connection(app):
     # Get database connection details from environment variables
