@@ -123,11 +123,8 @@ database is used to store user data, post information, and other relevant data. 
 
 ## Mariam
 - cache: Lagt in instance for redis i main.py, må finne ut om disse skal inn i categories, posts, og users.   
- Set data in the cache
-redis_cache.set_data('my_key', 'my_value')
- Retrieve data from the cache
-data = redis_cache.get_data('my_key')
-print(data)  # Output: b'my_value'
+- Gotta fix this somehow, when try to import database, it doesnt work, so having db 
+connection here is the only way it works for some reason.
 
 
  load balancer og like batching.
