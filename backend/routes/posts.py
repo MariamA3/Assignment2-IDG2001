@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from datetime import datetime
 from config.databaseConnect import db
 from models.models import Post
-from redis_cache import RedisCache
+from redis_cache import RedisCache 
 
 # Create a Blueprint object for posts
 posts = Blueprint('posts', __name__)
@@ -75,13 +75,7 @@ def create_post():
     if not title or not content or not user_id or not category_id:
         return jsonify({'message': 'Missing required fields'}), 400
 
-    new_post = Post(
-        title=title,
-        content=content,
-        user_id=user_id,
-        category_id=category_id,
-        created_at=datetime.utcnow()  # Manually set the creation time to UTC now
-    )
+    new_post = Post(title=title, content=content, user_id=user_id, category_id=category_id)
     db.session.add(new_post)
     db.session.commit()
 
