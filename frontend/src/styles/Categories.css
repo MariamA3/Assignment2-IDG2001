@@ -14,18 +14,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: inherit;
-    padding: 10px;
-    border: 2px solid white; 
+    padding: 15px;
     border-radius: 20px;
     transition: background-color 0.3s ease;
     height: 60px;
-    width: 200px;
+    width: 240px;
     margin: auto;
 }
 
-.categories-link a:hover {
-    text-decoration: underline;
+.create-post-link {
+    color: white;
+    border: 1px solid white;
+
+}
+
+.login-button {
+    color: black;
+    border: none;
 }
 
 

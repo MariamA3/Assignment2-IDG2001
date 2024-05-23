@@ -32,7 +32,7 @@ function Login() {
     setIsLoading(true); 
     try {
       await auth.login({ username, password }); 
-      navigate("/"); 
+      navigate(-1); 
       console.log("Login successful")
     } catch (error) {
       console.error("Failed to login: ", error);

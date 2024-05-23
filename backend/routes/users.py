@@ -56,11 +56,18 @@ def logout():
     resp.set_cookie('csrf_access_token', '', expires=0)
     return resp, 200
 
+@users.route('/users/<int:user_id>', methods=['GET'])
+def get_user_id(user_id):
+    user = User.query.get_or_404(user_id)
+    return jsonify(username=user.username, email=user.email, user_id=user.user_id), 200
+
+# GET a specific user by username
 @users.route('/<username>', methods=['GET'])
 def get_user(username):
     user = User.query.filter_by(username=username).first_or_404()
     return jsonify(username=user.username, email=user.email, user_id=user.user_id), 200
 
+# DELETE a user by username
 @users.route('/users/<username>', methods=['DELETE'])
 @jwt_required()
 def delete_user(username):

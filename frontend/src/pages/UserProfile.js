@@ -58,15 +58,13 @@ function UserProfile() {
     }
   };
 
-  console.log(profile);
-
   return (
     <div className="profile-container">
       <h2>{profile.username} profile</h2>
       <p>Username: {profile.username}</p>
       <p>Email: {profile.email}</p>
       {currentUser && currentUser.username === profile.username && (
-        <button onClick={handleDeleteAccount}>Delete Account</button>
+        <button className="delete-button" onClick={handleDeleteAccount}>Delete Account</button>
       )}
       <GoBackButton>Go Back</GoBackButton>
     </div>
