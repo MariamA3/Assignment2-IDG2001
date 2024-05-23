@@ -6,7 +6,7 @@
 from config.databaseConnect import db
 
 # Import the datetime module
-import datetime;
+from datetime import datetime
 
 # Define the User model, which represents the users table in the database
 # The User model has three columns: user_id, username, email, and password, which correspond to the columns in the users table
