@@ -94,7 +94,7 @@ function GetPosts() {
           <h2 className="post-title">Title: {post.title}</h2>
           <p className="post-content">Content: {post.content}</p>
           <p className="post-footer">Category: {post.category_id}</p>
-          <p className="post-footer">Date: {post.date}</p>
+          <p className="post-footer">Date: {post.created_at}</p>
           <p className="post-footer">Posted by: {post.username}</p>
           <button
             onClick={() => handleLike(post.post_id)}
