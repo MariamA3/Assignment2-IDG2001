@@ -1,3 +1,5 @@
+# redis connection module 
+#to connect redis to python 
 # redis_cache.py
 import redis
 import json
