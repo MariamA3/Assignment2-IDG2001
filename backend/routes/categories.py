@@ -1,61 +1,77 @@
-# Description: This file contains the routes for categories.
-# A route is a URL pattern that is associated with a function that is executed when the URL is visited.
-# Also called api endpoints.
-# This is for the categories table in the database.
-# The routes in this file allow users to perform CRUD operations on the categories table.
-
-# Import the Blueprint class from the flask module, which is used to create a Blueprint object
 from flask import Blueprint, request, jsonify
-
-# Import the db object from the databaseConnect module
 from config.databaseConnect import db
-
-# Import the Category model from the models module
 from models.models import Category
-
-# Import RedisCache
-from redis_cache import RedisCache 
+from redis_cache import RedisCache
+import json
+import redis
+import logging
 
 # Create a Blueprint object for categories, which represents the categories routes
 categories = Blueprint('categories', __name__)
 
+# Initialize RedisCache instance
+redis_cache = RedisCache()
+
+# Helper function to serialize SQLAlchemy objects
+def serialize_category(category):
+    return {
+        'category_id': category.category_id,
+        'name': category.name
+    }
 
 # GET all categories, returns a list of all categories
 @categories.route('/categories', methods=['GET'])
 def get_categories():
-    #check if categories are cached 
-    categories_data = RedisCache().get_data('categories')
-    if not categories_data:
+    try:
+        # Check if categories are cached
+        categories_data = redis_cache.get_data('categories')
+        if not categories_data:
+            print("Categories not found in cache, querying database.")
+            categories_data = Category.query.all()
+            # Serialize the data before caching
+            serialized_data = [serialize_category(category) for category in categories_data]
+            # Cache categories data for 1 hour (3600 seconds)
+            redis_cache.set_data('categories', serialized_data, expire=3600)
+        else:
+            print("Categories found in cache.")
+            # Deserialize the data from cache
+            serialized_data = categories_data
+    except redis.exceptions.ConnectionError as e:
+        logging.error(f"Redis connection error: {e}")
+        # If Redis is unavailable, fallback to querying the database
         categories_data = Category.query.all()
-         # Cache categories data for 1 hour (3600 seconds)
-        RedisCache.set_data('categories', categories_data, expire=36000)
+        serialized_data = [serialize_category(category) for category in categories_data]
 
-        categories_list = [
-            {
-                'category_id': category.category_id,
-                'name': category.name
-            } for category in categories_data
-        ]
-        return jsonify(categories_list)
+    return jsonify(serialized_data)
 
 # GET a specific category by ID, returns the category with the specified ID
 @categories.route('/categories/<int:id>', methods=['GET'])
 def get_category(id):
-    # Check if category data is cached
-    category_data = RedisCache.get_data(f'category_{id}')
-    if category_data:
+    try:
+        # Check if category data is cached
+        category_data = redis_cache.get_data(f'category_{id}')
+        if not category_data:
+            print(f"Category {id} not found in cache, querying database.")
+            category_data = Category.query.get(id)
+            if not category_data:
+                return jsonify({'message': 'Category not found'}), 404
+            # Serialize the data before caching
+            serialized_data = serialize_category(category_data)
+            # Cache category data for 1 hour (3600 seconds)
+            redis_cache.set_data(f'category_{id}', serialized_data, expire=3600)
+        else:
+            print(f"Category {id} found in cache.")
+            # Deserialize the data from cache
+            serialized_data = category_data
+    except redis.exceptions.ConnectionError as e:
+        logging.error(f"Redis connection error: {e}")
+        # If Redis is unavailable, fallback to querying the database
         category_data = Category.query.get(id)
-
         if not category_data:
             return jsonify({'message': 'Category not found'}), 404
-        # Cache category data for 1 hour (3600 seconds)
-        RedisCache.set_data(f'category_{id}', category_data, expire=3600)
+        serialized_data = serialize_category(category_data)
 
-        category = {
-            'category_id': category_data.category_id,
-            'name': category_data.name
-        }
-        return jsonify(category)
+    return jsonify(serialized_data)
 
 @categories.route('/categories/name/<string:name>', methods=['GET'])
 def get_category_by_name(name):
@@ -63,10 +79,7 @@ def get_category_by_name(name):
     if not category_data:
         return jsonify({'message': 'Category not found'}), 404
 
-    category_dict = {
-        'category_id': category_data.category_id,
-        'name': category_data.name
-    }
+    category_dict = serialize_category(category_data)
 
     return jsonify(category_dict), 200
 
@@ -82,6 +95,12 @@ def create_category():
     new_category = Category(name=name)
     db.session.add(new_category)
     db.session.commit()
+
+    try:
+        # Invalidate cache
+        redis_cache.redis_client.delete('categories')
+    except redis.exceptions.ConnectionError as e:
+        logging.error(f"Redis connection error: {e}")
 
     return jsonify({'message': 'Category created successfully'}), 201
 
@@ -102,6 +121,13 @@ def update_category(id):
     category_data.name = name
     db.session.commit()
 
+    try:
+        # Invalidate cache
+        redis_cache.redis_client.delete(f'category_{id}')
+        redis_cache.redis_client.delete('categories')
+    except redis.exceptions.ConnectionError as e:
+        logging.error(f"Redis connection error: {e}")
+
     return jsonify({'message': 'Category updated successfully'}), 200
 
 # DELETE a category by ID, deletes the category with the specified ID
@@ -114,5 +140,12 @@ def delete_category(id):
 
     db.session.delete(category_data)
     db.session.commit()
+
+    try:
+        # Invalidate cache
+        redis_cache.redis_client.delete(f'category_{id}')
+        redis_cache.redis_client.delete('categories')
+    except redis.exceptions.ConnectionError as e:
+        logging.error(f"Redis connection error: {e}")
 
     return jsonify({'message': 'Category deleted'}), 200
