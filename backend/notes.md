@@ -1,4 +1,12 @@
-pip install Flask Flask-SQLAlchemy Flask-Migrate Flask-JWT-Extended Flask-Bcrypt pymysql python-dotenv email-validator
+pip3 install Flask Flask-SQLAlchemy Flask-Migrate Flask-JWT-Extended Flask-Bcrypt pymysql python-dotenv email-validator Flask-Cors
+
+# Create a new Flask project
+
+flask db init
+
+# This will create a new directory called migrations in your project.
+
+export FLASK_APP=main.py
 
 # Step 1: Generate a New Migration Script
 
@@ -34,3 +42,39 @@ mysql -u username -p database_name < backup.sql
 
 http://127.0.0.1:4000/categories - GET, POST
 http://127.0.0.1:4000/categories/<int:id> - GET, PUT, DELETE
+
+1. Stamp the Database
+   If the current schema of the database is already in the state you want and you want to synchronize Alembic's state with the database, you can use the stamp command. This command will set the current revision in the database without performing any migrations:
+
+```bash
+   flask db stamp b94c699496ff
+```
+
+However, since the revision b94c699496ff does not exist in your migrations/versions directory, you might first need to create a dummy revision just to satisfy the reference, then delete it after stamping. Here’s how to do it:
+
+```bash
+flask db revision -m "Dummy for b94c699496ff" --rev-id b94c699496ff
+```
+
+Then, you can stamp the database:
+
+```bash
+  flask db stamp b94c699496ff
+```
+
+      Finally, you can delete the dummy revision:
+
+```bash
+rm migrations/versions/b94c699496ff_dummy_for_b94c699496ff.py
+```
+
+3. Rebuild from Scratch
+   In a development environment where it's feasible, consider starting over:
+
+Drop the Database: Completely drop the database to start afresh.
+Create the Database: Recreate the database.
+Run Migrations: Start the migrations again
+
+```bash
+flask db upgrade
+```
