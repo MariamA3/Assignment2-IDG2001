@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from datetime import datetime
 from config.databaseConnect import db
 from models.models import Post
 from flask import Blueprint, request, jsonify
@@ -73,7 +74,13 @@ def create_post():
     if not title or not content or not user_id or not category_id:
         return jsonify({'message': 'Missing required fields'}), 400
 
-    new_post = Post(title=title, content=content, user_id=user_id, category_id=category_id)
+    new_post = Post(
+        title=title,
+        content=content,
+        user_id=user_id,
+        category_id=category_id,
+        created_at=datetime.utcnow()  # Manually set the creation time to UTC now
+    )
     db.session.add(new_post)
     db.session.commit()
 
