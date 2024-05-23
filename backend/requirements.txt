@@ -6,3 +6,4 @@ flask-cors
 pydantic
 python-dotenv
 pymysql
+redis

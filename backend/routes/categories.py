@@ -13,49 +13,32 @@ from config.databaseConnect import db
 # Import the Category model from the models module
 from models.models import Category
 
-# Import RedisCache
-from redis_cache import RedisCache 
-
 # Create a Blueprint object for categories, which represents the categories routes
 categories = Blueprint('categories', __name__)
-
 
 # GET all categories, returns a list of all categories
 @categories.route('/categories', methods=['GET'])
 def get_categories():
-    #check if categories are cached 
-    categories_data = RedisCache().get_data('categories')
-    if not categories_data:
-        categories_data = Category.query.all()
-         # Cache categories data for 1 hour (3600 seconds)
-        RedisCache.set_data('categories', categories_data, expire=36000)
-
-        categories_list = [
-            {
-                'category_id': category.category_id,
-                'name': category.name
-            } for category in categories_data
-        ]
-        return jsonify(categories_list)
+    categories_data = Category.query.all()
+    categories_list = [
+        {
+            'category_id': category.category_id,
+            'name': category.name
+        } for category in categories_data
+    ]
+    return jsonify(categories_list)
 
 # GET a specific category by ID, returns the category with the specified ID
 @categories.route('/categories/<int:id>', methods=['GET'])
 def get_category(id):
-    # Check if category data is cached
-    category_data = RedisCache.get_data(f'category_{id}')
+    category_data = Category.query.get(id)
     if category_data:
-        category_data = Category.query.get(id)
-
-        if not category_data:
-            return jsonify({'message': 'Category not found'}), 404
-        # Cache category data for 1 hour (3600 seconds)
-        RedisCache.set_data(f'category_{id}', category_data, expire=3600)
-
         category = {
             'category_id': category_data.category_id,
             'name': category_data.name
         }
         return jsonify(category)
+    return jsonify({'message': 'Category not found'}), 404
 
 @categories.route('/categories/name/<string:name>', methods=['GET'])
 def get_category_by_name(name):

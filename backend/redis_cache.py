@@ -1,7 +1,6 @@
 # redis connection module 
 #to connect redis to python 
 
-#DENNE ER NY 
 import redis
 import json
 
