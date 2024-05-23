@@ -2,23 +2,59 @@ from flask import Blueprint, request, jsonify
 from datetime import datetime
 from config.databaseConnect import db
 from models.models import Post
-from redis_cache import RedisCache 
+import redis
+import json
+import logging
+
+# Create a Redis client instance
+try:
+    redis_client = redis.Redis(host='localhost', port=6379, db=0)
+    redis_client.ping()  # Test the connection
+except redis.exceptions.ConnectionError as e:
+    logging.error(f"Redis connection error: {e}")
+    redis_client = None
 
 # Create a Blueprint object for posts
 posts = Blueprint('posts', __name__)
 
+# Helper function to check Redis connection
+def is_redis_connected():
+    try:
+        if redis_client:
+            redis_client.ping()
+            return True
+    except redis.exceptions.ConnectionError as e:
+        logging.error(f"Redis connection error: {e}")
+    return False
+
 # GET all posts
 @posts.route('/posts', methods=['GET'])
 def get_posts():
-    # Check if posts data is cached
-    posts_data = RedisCache().get_data('posts')
-    if not posts_data:
-        # If not cached, query the database to fetch posts data
-        posts_data = Post.query.all()
-        # Cache posts data for 1 hour (3600 seconds)
-        RedisCache().set_data('posts', posts_data, expire=3600)
+    if is_redis_connected():
+        try:
+            posts_data = redis_client.get('posts')
+            if posts_data:
+                return jsonify(json.loads(posts_data))
 
-    # Format posts data
+            posts_data = Post.query.all()
+            posts_list = [
+                {
+                    'post_id': post.post_id,
+                    'title': post.title,
+                    'content': post.content,
+                    'user_id': post.user_id,
+                    'category_id': post.category_id,
+                    'created_at': post.created_at.isoformat() if post.created_at else None
+                } for post in posts_data
+            ]
+
+            redis_client.set('posts', json.dumps(posts_list), ex=3600)  # Cache for 1 hour
+            return jsonify(posts_list)
+        except redis.exceptions.ConnectionError as e:
+            logging.error(f"Redis connection error: {e}")
+
+    # Fallback to database query if Redis is not available
+    posts_data = Post.query.all()
     posts_list = [
         {
             'post_id': post.post_id,
@@ -34,6 +70,29 @@ def get_posts():
 # GET a specific post by ID
 @posts.route('/posts/id/<int:id>', methods=['GET'])
 def get_post(id):
+    if is_redis_connected():
+        try:
+            post_data = redis_client.get(f'post_{id}')
+            if post_data:
+                return jsonify(json.loads(post_data))
+
+            post_data = Post.query.get(id)
+            if post_data:
+                post = {
+                    'post_id': post_data.post_id,
+                    'title': post_data.title,
+                    'content': post_data.content,
+                    'user_id': post_data.user_id,
+                    'category_id': post_data.category_id,
+                    'created_at': post_data.created_at.isoformat() if post_data.created_at else None
+                }
+                redis_client.set(f'post_{id}', json.dumps(post), ex=3600)  # Cache for 1 hour
+                return jsonify(post)
+            return jsonify({'message': 'Post not found'}), 404
+        except redis.exceptions.ConnectionError as e:
+            logging.error(f"Redis connection error: {e}")
+
+    # Fallback to database query if Redis is not available
     post_data = Post.query.get(id)
     if post_data:
         post = {
@@ -75,12 +134,21 @@ def create_post():
     if not title or not content or not user_id or not category_id:
         return jsonify({'message': 'Missing required fields'}), 400
 
-    new_post = Post(title=title, content=content, user_id=user_id, category_id=category_id)
+    new_post = Post(
+        title=title,
+        content=content,
+        user_id=user_id,
+        category_id=category_id,
+        created_at=datetime.utcnow()  # Manually set the creation time to UTC now
+    )
     db.session.add(new_post)
     db.session.commit()
 
-    # Invalidate the cached posts data after adding a new post
-    RedisCache().delete_data('posts')
+    if is_redis_connected():
+        try:
+            redis_client.delete('posts')
+        except redis.exceptions.ConnectionError as e:
+            logging.error(f"Redis connection error: {e}")
 
     return jsonify({'message': 'Post created successfully'}), 201
 
@@ -102,8 +170,12 @@ def update_post(id):
     post_data.content = content
     db.session.commit()
 
-    # Invalidate the cached posts data after updating a post
-    RedisCache().delete_data('posts')
+    if is_redis_connected():
+        try:
+            redis_client.delete(f'post_{id}')
+            redis_client.delete('posts')
+        except redis.exceptions.ConnectionError as e:
+            logging.error(f"Redis connection error: {e}")
 
     return jsonify({'message': 'Post updated successfully'}), 200
 
@@ -117,21 +189,30 @@ def delete_post(id):
     db.session.delete(post_data)
     db.session.commit()
 
-    # Invalidate the cached posts data after deleting a post
-    RedisCache().delete_data('posts')
+    if is_redis_connected():
+        try:
+            redis_client.delete(f'post_{id}')
+            redis_client.delete('posts')
+        except redis.exceptions.ConnectionError as e:
+            logging.error(f"Redis connection error: {e}")
 
     return jsonify({'message': 'Post deleted'}), 200
 
 # LIKE a post
 @posts.route('/posts/like/<int:id>', methods=['POST'])
 def like_post(id):
-    # Assume authenticated user with user_id
     user_id = request.json.get('user_id')
     if user_id:
-        # Queue like in Redis
-        like_data = {'user_id': user_id, 'post_id': id}
-        redis_client.rpush('pending_likes', json.dumps(like_data))
-        return jsonify({'message': 'Like queued successfully'}), 200
+        if is_redis_connected():
+            try:
+                like_data = {'user_id': user_id, 'post_id': id}
+                redis_client.rpush('pending_likes', json.dumps(like_data))
+                return jsonify({'message': 'Like queued successfully'}), 200
+            except redis.exceptions.ConnectionError as e:
+                logging.error(f"Redis connection error: {e}")
+                return jsonify({'message': 'Like could not be queued'}), 500
+        else:
+            return jsonify({'message': 'Redis not connected'}), 500
     return jsonify({'message': 'User ID is required'}), 400
 
 # UNLIKE a post
@@ -139,8 +220,14 @@ def like_post(id):
 def unlike_post(id):
     user_id = request.json.get('user_id')
     if user_id:
-        # Remove like from Redis queue if it exists
-        like_data = {'user_id': user_id, 'post_id': id}
-        redis_client.lrem('pending_likes', 0, json.dumps(like_data))
-        return jsonify({'message': 'Unlike queued successfully'}), 200
+        if is_redis_connected():
+            try:
+                like_data = {'user_id': user_id, 'post_id': id}
+                redis_client.lrem('pending_likes', 0, json.dumps(like_data))
+                return jsonify({'message': 'Unlike queued successfully'}), 200
+            except redis.exceptions.ConnectionError as e:
+                logging.error(f"Redis connection error: {e}")
+                return jsonify({'message': 'Unlike could not be queued'}), 500
+        else:
+            return jsonify({'message': 'Redis not connected'}), 500
     return jsonify({'message': 'User ID is required'}), 400
