@@ -42,6 +42,7 @@ function Categories() {
               // This is to send the category to the create post page using params
               pathname: `/b/${categoryName}/${categoryId}`,
             }}
+            className="create-post-link"
           >
             <img
               className="categories-icon"
