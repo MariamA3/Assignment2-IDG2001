@@ -1,4 +1,4 @@
-pip3 install Flask Flask-SQLAlchemy Flask-Migrate Flask-JWT-Extended Flask-Bcrypt pymysql python-dotenv email-validator Flask-Cors
+pip3 install Flask Flask-SQLAlchemy Flask-Migrate Flask-JWT-Extended Flask-Bcrypt pymysql python-dotenv email-validator Flask-Cors RedisCache
 
 # Create a new Flask project
 
