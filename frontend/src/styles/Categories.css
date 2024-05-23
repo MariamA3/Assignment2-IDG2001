@@ -14,9 +14,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: inherit;
+    color: black;
     padding: 10px;
-    border: 2px solid white; 
     border-radius: 20px;
     transition: background-color 0.3s ease;
     height: 60px;
