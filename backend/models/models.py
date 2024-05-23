@@ -24,10 +24,10 @@ class Post(db.Model):
     post_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, nullable=False)
-    category_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)  # Link to users table
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.category_id'), nullable=False)  # Ensure categories linkage as well
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-    user= db.relationship('User', backref=db.backref('posts', lazy=True))
+    user = db.relationship('User', backref=db.backref('posts', lazy=True))
     category = db.relationship('Category', backref=db.backref('posts', lazy=True))
 
 
