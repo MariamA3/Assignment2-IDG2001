@@ -24,7 +24,8 @@ def get_posts():
             'title': post.title,
             'content': post.content,
             'user_id': post.user_id,
-            'category_id': post.category_id
+            'category_id': post.category_id,
+            'created_at': post.created_at.isoformat() if post.created_at else None
         } for post in posts_data
     ]
     return jsonify(posts_list)
@@ -39,7 +40,8 @@ def get_post(id):
             'title': post_data.title,
             'content': post_data.content,
             'user_id': post_data.user_id,
-            'category_id': post_data.category_id
+            'category_id': post_data.category_id,
+            'created_at': post_data.created_at.isoformat() if post_data.created_at else None
         }
         return jsonify(post)
     return jsonify({'message': 'Post not found'}), 404
@@ -54,7 +56,8 @@ def get_posts_by_category(category_id):
             'title': post.title,
             'content': post.content,
             'user_id': post.user_id,
-            'category_id': post.category_id
+            'category_id': post.category_id,
+            'created_at': post.created_at.isoformat() if post.created_at else None
         } for post in post_data]
         return jsonify(posts)
     return jsonify({'message': 'No posts found for this category'}), 404
