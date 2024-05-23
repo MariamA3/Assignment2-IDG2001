@@ -1,6 +1,6 @@
 # Description: This file contains the models for the database tables.
 # A model represents a table in the database and is used to interact with the data in that table.
-# In this file, we define three models: User, Post, and Category.
+# In this file, we define four models: User, Post, category and likes. 
 
 # Import the db object from the databaseConnect module
 from config.databaseConnect import db
@@ -30,3 +30,17 @@ class Category(db.Model):
     __tablename__ = 'categories'
     category_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
+
+
+#Define the Likes model, which represents the likes table in the database
+# The Likes model has four columns: like_id, user_id, post_id, and created_at, which correspond to the columns in the likes table
+class Likes(db.Model):
+    __tablename__ = 'likes'
+    like_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id'), nullable=False)
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    # Define relationships
+    user = db.relationship('User', backref=db.backref('likes', lazy=True))
+    post = db.relationship('Post', backref=db.backref('likes', lazy=True))

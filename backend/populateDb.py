@@ -102,4 +102,3 @@ finally:
     # Close the cursor and connection
     cursor.close()
     conn.close()
-    backend/
