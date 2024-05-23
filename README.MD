@@ -122,7 +122,12 @@ database is used to store user data, post information, and other relevant data. 
 - login system med autentisering
 
 ## Mariam
-- cache, load balancer og like batching
+- cache: Lagt in instance for redis i main.py, må finne ut om disse skal inn i categories, posts, og users.   
+- Gotta fix this somehow, when try to import database, it doesnt work, so having db 
+connection here is the only way it works for some reason.
+
+
+ load balancer og like batching.
 
 ## Sebastian
 - api endpinits for å hente data fra databasen

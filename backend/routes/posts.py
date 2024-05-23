@@ -1,6 +1,14 @@
 from flask import Blueprint, request, jsonify
 from config.databaseConnect import db
 from models.models import Post
+from flask import Blueprint, request, jsonify
+from models.models import Post
+import redis
+import json
+
+# Create a Redis client instance
+redis_client = redis.Redis(host='redis', port=6379, db=0)
+
 
 # Create a Blueprint object for posts
 posts = Blueprint('posts', __name__)
@@ -15,7 +23,8 @@ def get_posts():
             'title': post.title,
             'content': post.content,
             'user_id': post.user_id,
-            'category_id': post.category_id
+            'category_id': post.category_id,
+            'created_at': post.created_at.isoformat() if post.created_at else None
         } for post in posts_data
     ]
     return jsonify(posts_list)
@@ -30,7 +39,8 @@ def get_post(id):
             'title': post_data.title,
             'content': post_data.content,
             'user_id': post_data.user_id,
-            'category_id': post_data.category_id
+            'category_id': post_data.category_id,
+            'created_at': post_data.created_at.isoformat() if post_data.created_at else None
         }
         return jsonify(post)
     return jsonify({'message': 'Post not found'}), 404
@@ -45,7 +55,8 @@ def get_posts_by_category(category_id):
             'title': post.title,
             'content': post.content,
             'user_id': post.user_id,
-            'category_id': post.category_id
+            'category_id': post.category_id,
+            'created_at': post.created_at.isoformat() if post.created_at else None
         } for post in post_data]
         return jsonify(posts)
     return jsonify({'message': 'No posts found for this category'}), 404
@@ -99,3 +110,26 @@ def delete_post(id):
     db.session.commit()
 
     return jsonify({'message': 'Post deleted'}), 200
+
+# LIKE a post
+@posts.route('/posts/like/<int:id>', methods=['POST'])
+def like_post(id):
+    # Assume authenticated user with user_id
+    user_id = request.json.get('user_id')
+    if user_id:
+        # Queue like in Redis
+        like_data = {'user_id': user_id, 'post_id': id}
+        redis_client.rpush('pending_likes', json.dumps(like_data))
+        return jsonify({'message': 'Like queued successfully'}), 200
+    return jsonify({'message': 'User ID is required'}), 400
+
+# UNLIKE a post
+@posts.route('/posts/unlike/<int:id>', methods=['POST'])
+def unlike_post(id):
+    user_id = request.json.get('user_id')
+    if user_id:
+        # Remove like from Redis queue if it exists
+        like_data = {'user_id': user_id, 'post_id': id}
+        redis_client.lrem('pending_likes', 0, json.dumps(like_data))
+        return jsonify({'message': 'Unlike queued successfully'}), 200
+    return jsonify({'message': 'User ID is required'}), 400
