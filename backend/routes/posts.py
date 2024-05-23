@@ -1,14 +1,7 @@
 from flask import Blueprint, request, jsonify
 from config.databaseConnect import db
 from models.models import Post
-from flask import Blueprint, request, jsonify
-from models.models import Post
-import redis
-import json
-
-# Create a Redis client instance
-redis_client = redis.Redis(host='redis', port=6379, db=0)
-
+from redis_cache import RedisCache
 
 # Create a Blueprint object for posts
 posts = Blueprint('posts', __name__)
@@ -16,7 +9,15 @@ posts = Blueprint('posts', __name__)
 # GET all posts
 @posts.route('/posts', methods=['GET'])
 def get_posts():
-    posts_data = Post.query.all()
+    # Check if posts data is cached
+    posts_data = RedisCache().get_data('posts')
+    if not posts_data:
+        # If not cached, query the database to fetch posts data
+        posts_data = Post.query.all()
+        # Cache posts data for 1 hour (3600 seconds)
+        RedisCache().set_data('posts', posts_data, expire=3600)
+
+    # Format posts data
     posts_list = [
         {
             'post_id': post.post_id,
@@ -74,6 +75,9 @@ def create_post():
     db.session.add(new_post)
     db.session.commit()
 
+    # Invalidate the cached posts data after adding a new post
+    RedisCache().delete_data('posts')
+
     return jsonify({'message': 'Post created successfully'}), 201
 
 # UPDATE an existing post by ID
@@ -94,6 +98,9 @@ def update_post(id):
     post_data.content = content
     db.session.commit()
 
+    # Invalidate the cached posts data after updating a post
+    RedisCache().delete_data('posts')
+
     return jsonify({'message': 'Post updated successfully'}), 200
 
 # DELETE a post by ID
@@ -105,6 +112,9 @@ def delete_post(id):
 
     db.session.delete(post_data)
     db.session.commit()
+
+    # Invalidate the cached posts data after deleting a post
+    RedisCache().delete_data('posts')
 
     return jsonify({'message': 'Post deleted'}), 200
 
