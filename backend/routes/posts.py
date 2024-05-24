@@ -48,7 +48,7 @@ def get_posts():
                 } for post in posts_data
             ]
 
-            redis_client.set('posts', json.dumps(posts_list), ex=3600)  # Cache for 1 hour
+            redis_client.set('posts', json.dumps(posts_list), ex=900)  # Cache for 15 min
             return jsonify(posts_list)
         except redis.exceptions.ConnectionError as e:
             logging.error(f"Redis connection error: {e}")
@@ -86,7 +86,7 @@ def get_post(id):
                     'category_id': post_data.category_id,
                     'created_at': post_data.created_at.isoformat() if post_data.created_at else None
                 }
-                redis_client.set(f'post_{id}', json.dumps(post), ex=3600)  # Cache for 1 hour
+                redis_client.set(f'post_{id}', json.dumps(post), ex=900)  # Cache for 15 min
                 return jsonify(post)
             return jsonify({'message': 'Post not found'}), 404
         except redis.exceptions.ConnectionError as e:
