@@ -43,25 +43,23 @@ redis_host = os.getenv('REDIS_HOST', 'localhost')  # Change 'localhost' to 'redi
 redis_port = int(os.getenv('REDIS_PORT', 6379))
 redis_client = redis.Redis(host=redis_host, port=redis_port, db=0)
 
+# Define the batch size for processing likes
+BATCH_SIZE = 10
+
 # Function to process likes
 def process_likes():
     with app.app_context():
         while True:
             # Check Redis for pending likes
             pending_likes = redis_client.lrange('pending_likes', 0, -1)
-            if pending_likes:
-                # Process likes in batches
-                # Sends after 11 likes have been registered
-                batch_size = 11
-                for i in range(0, len(pending_likes), batch_size):
-                    batch = pending_likes[i:i+batch_size]
-                    process_likes_batch(batch)
-
+            if pending_likes and len(pending_likes) >= BATCH_SIZE: 
+                # Process likes only if the batch size threshold is reached
+                process_likes_batch(pending_likes)
                 # Remove processed likes from Redis
-                redis_client.ltrim('pending_likes', len(pending_likes), -1)
-
+                redis_client.delete('pending_likes')
             # Wait for some time before checking again
-            time.sleep(60)
+            time.sleep(10)
+
 
 # Function to process each batch of likes
 def process_likes_batch(batch):
