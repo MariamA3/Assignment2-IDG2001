@@ -19,7 +19,6 @@ function GetPosts() {
         .get(`/categories/name/${categoryName}`)
         .then((response) => {
           const category = response.data;
-          console.log("Fetched category:", category); // Debug log
           if (category && category.category_id) {
             return axiosInstance.get(`/posts/category/${category.category_id}`);
           } else {
@@ -28,7 +27,6 @@ function GetPosts() {
         })
         .then((response) => {
           const posts = response.data;
-          console.log("Fetched posts:", posts); // Debug log
           if (Array.isArray(posts) && posts.length > 0) {
             const postPromises = posts.map((post) =>
               axiosInstance
@@ -38,10 +36,8 @@ function GetPosts() {
                 })
                 .catch((error) => {
                   if (error.response && error.response.status === 404) {
-                    console.error(`User with ID ${post.user_id} not found`);
                     return { ...post, username: "User not found" };
                   } else {
-                    console.error("Error fetching user data:", error.message);
                     return { ...post, username: "Error fetching user" };
                   }
                 })
@@ -52,27 +48,29 @@ function GetPosts() {
           }
         })
         .then((postsWithUsernames) => {
-          console.log("Posts with usernames:", postsWithUsernames);
           setPosts(postsWithUsernames);
         })
         .catch((error) => {
-          if (error.response && error.response.status === 404) {
-            console.error("Category not found");
-          } else {
-            console.error("Error fetching data:", error.message);
-          }
-          // Clear posts if an error occurs
-          setPosts([]); 
+          setPosts([]);
         })
         .finally(() => {
-          // Ensure loading is set to false even if an error occurs
-          setLoading(false); 
+          setLoading(false);
         });
     }
   }, [categoryName]);
 
-  const handleLike = (postId) => {
-    setLikes({ ...likes, [postId]: (likes[postId] || 0) + 1 });
+  const handleLike = async (postId) => {
+    try {
+      const userId = 1; // Replace with the actual user ID
+      const response = await axiosInstance.post('/like', { user_id: userId, post_id: postId });
+      if (response.status === 200) {
+        setLikes({ ...likes, [postId]: (likes[postId] || 0) + 1 });
+      } else {
+        console.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error liking post:', error.message);
+    }
   };
 
   if (loading) {
