@@ -10,54 +10,44 @@ function GetPosts() {
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState({});
   const [loading, setLoading] = useState(true);
+  const [offset, setOffset] = useState(0); // Track the offset for fetching additional posts
 
   useEffect(() => {
     if (categoryName) {
       setLoading(true);
 
+      // Fetch the 10 most recent posts initially
       axiosInstance
         .get(`/categories/name/${categoryName}`)
         .then((response) => {
           const category = response.data;
           if (category && category.category_id) {
-            return axiosInstance.get(`/posts/category/${category.category_id}`);
+            return axiosInstance.get(`/posts/category/${category.category_id}?limit=10&offset=${offset}`);
           } else {
             throw new Error("Category not found or category ID is undefined");
           }
         })
         .then((response) => {
-          const posts = response.data;
-          if (Array.isArray(posts) && posts.length > 0) {
-            const postPromises = posts.map((post) =>
-              axiosInstance
-                .get(`/users/${post.user_id}`)
-                .then((userResponse) => {
-                  return { ...post, username: userResponse.data.username };
-                })
-                .catch((error) => {
-                  if (error.response && error.response.status === 404) {
-                    return { ...post, username: "User not found" };
-                  } else {
-                    return { ...post, username: "Error fetching user" };
-                  }
-                })
-            );
-            return Promise.all(postPromises);
+          const newPosts = response.data;
+          if (Array.isArray(newPosts) && newPosts.length > 0) {
+            setPosts((prevPosts) => [...prevPosts, ...newPosts]); // Append new posts to the existing ones
           } else {
             throw new Error("No posts found for this category");
           }
         })
-        .then((postsWithUsernames) => {
-          setPosts(postsWithUsernames);
-        })
         .catch((error) => {
-          setPosts([]);
+          console.error("Error fetching posts:", error);
         })
         .finally(() => {
           setLoading(false);
         });
     }
-  }, [categoryName]);
+  }, [categoryName, offset]); // Include offset in the dependency array
+
+  // Function to fetch 10 more posts
+  const fetchMorePosts = () => {
+    setOffset((prevOffset) => prevOffset + 10); // Increment offset by 10
+  };
 
   const handleLike = async (postId) => {
     try {
@@ -107,6 +97,7 @@ function GetPosts() {
           </button>
         </div>
       ))}
+      <button onClick={fetchMorePosts}>Load More</button> {/* Button to fetch 10 more posts */}
     </div>
   );
 }
