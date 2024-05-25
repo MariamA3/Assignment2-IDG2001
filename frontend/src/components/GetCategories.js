@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import Loading from "../components/Loading";
 import axiosInstance from "../api/axios";
 import "../styles/GetCategories.css";
@@ -19,9 +20,10 @@ function GetCategories() {
         setLoading(false);
       })
       .catch((error) => {
-        // Log the error and stop loading even if an error occurs (Or infinite loading will occur)
-        console.error("Error fetching data: ", error);
+        // Log the error and stop loading even if an error occurs
         setLoading(false);
+        toast.error("Failed to fetch categories. Please try again later.");
+        console.error("Error fetching data: ", error);        
       });
   }, []);
 

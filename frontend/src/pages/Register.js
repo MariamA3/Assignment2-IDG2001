@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import axiosInstance from "../api/axios";
 import "../styles/Auth.css";
 
@@ -27,23 +28,29 @@ function Register() {
   const validateForm = () => {
     // Required fields check
     if (!formData.username || !formData.email || !formData.password) {
+      toast.error("Please fill in all fields.");
       return false;
     }
 
     // Email format check using a simple regex pattern for demonstration purposes
     const emailPattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
     if (!emailPattern.test(formData.email)) {
+      toast.error("Please enter a valid email address.");
       return false;
     }
 
     // Password length check
     if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters long.");
       return false;
     }
 
     // Password must contain at least one uppercase letter and one special character
     const passwordPattern = /^(?=.*[A-Z])(?=.*[!@#$&*]).*$/;
     if (!passwordPattern.test(formData.password)) {
+      toast.error(
+        "Password must contain at least one uppercase letter and one special character."
+      );
       return false;
     }
     // If all checks pass
@@ -58,9 +65,11 @@ function Register() {
     try {
       const response = await axiosInstance.post("/register", formData);
       console.log("Registration successful:", response.data);
+      toast.success("Registration successful! Please login to continue.");
       navigate("/login");
     } catch (error) {
       console.error("Registration failed:", error);
+      toast.error("Registration failed. Please try again later.");
     } finally {
       setIsSubmitting(false); // Reset submission status
     }
