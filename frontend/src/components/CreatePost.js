@@ -78,7 +78,7 @@ function CreatePost() {
       <label className="create-post-content-wrapper">
         <textarea
           id="content"
-          placeholder="Write down your ideas here..."
+          placeholder="Write your text here"
           name="content"
           value={post.content}
           onChange={handlepostChange}
