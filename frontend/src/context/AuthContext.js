@@ -52,6 +52,11 @@ export const AuthProvider = ({ children }) => {
         username,
         password,
       });
+
+      if (response.status !== 200) {
+        throw new Error('Failed to login');
+      }
+
       // On successful login, update the current user and authentication state
       setCurrentUser(response.data.data);
       setIsAuthenticated(true);

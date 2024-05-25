@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { toast } from "react-toastify";
 import axiosInstance from "../api/axios";
 import Loading from "./Loading";
 import GoBackButton from "./GoBack";
@@ -28,6 +29,8 @@ function CreatePost() {
       await axiosInstance.post("/posts", post);
       setLoading(false);
 
+      toast.success("Post created successfully!");
+
       // Clear the form fields after successful post creation
       setPost({
         title: "",
@@ -42,6 +45,7 @@ function CreatePost() {
     } catch (error) {
       // Log the error and stop loading even if an error occurs (Or infinite loading will occur)
       console.error("Failed to create post:", error);
+      toast.error("Failed to create post. Please try again later.");
       setLoading(false);
     }
   };
@@ -78,7 +82,7 @@ function CreatePost() {
       <label className="create-post-content-wrapper">
         <textarea
           id="content"
-          placeholder="Write down your ideas here..."
+          placeholder="Write your text here"
           name="content"
           value={post.content}
           onChange={handlepostChange}

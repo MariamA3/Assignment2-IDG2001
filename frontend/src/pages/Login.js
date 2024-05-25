@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Auth.css";
 
-// I have comment out some functionality will be implemented when we have a working backends
+// For the login page, we will create a form that takes in a username and password.
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -19,6 +20,7 @@ function Login() {
 
   const validateInputs = () => {
     if (!username || !password) {
+      toast.error("Please fill in all fields.");
       return false;
     }
 
@@ -32,10 +34,11 @@ function Login() {
     setIsLoading(true); 
     try {
       await auth.login({ username, password }); 
-      navigate(-1); 
-      console.log("Login successful")
+      toast.success("Login successful!");
+      navigate("/"); 
     } catch (error) {
       console.error("Failed to login: ", error);
+      toast.error("Failed to login. Please try again later.");
     } finally {
       setIsLoading(false); 
     }
