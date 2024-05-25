@@ -30,6 +30,20 @@ This project aims to develop a simplified version of a Reddit-like forum website
 4. Modify the DockerCompose file and environment variables as needed.
 5. Run `docker-compose up --build` to build and start the containers.
 
+
+
+## Running Like Batcher Continuously
+
+### Using `systemd` Service
+
+To ensure the `like_batcher.py` script runs continuously, you can set it up as a `systemd` service on a Linux system.
+
+1. **Create a service file:**
+
+   ```sh
+   sudo nano /etc/systemd/system/like_batcher.service
+2. 
+
 ## Testing
 1. Ensure all containers are running using `docker ps`.
 2. Use the provided test files to run unit tests for the cache and processing layers.
