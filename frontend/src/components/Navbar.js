@@ -1,11 +1,16 @@
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { FaBars, FaTimes } from "react-icons/fa";
 import userIcon from "../assets/user.svg";
 import logo from "../assets/bread.svg";
+import GetCategories from "./GetCategories";
 import "../styles/Navbar.css";
 
+// For ;
 function Navbar() {
   const { isAuthenticated, currentUser } = useAuth();
+  const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
 
   // Function to format the path
@@ -13,6 +18,10 @@ function Navbar() {
   const formatPath = (path) => {
     if (path === "/") return "Home";
     return path.charAt(1).toUpperCase() + path.slice(2);
+  };
+
+  const toggleMenu = () => {
+    setShowMenu(!showMenu);
   };
 
   return (
@@ -26,17 +35,28 @@ function Navbar() {
 
       <h2>{formatPath(location.pathname)}</h2>
       <div className="right-section">
-        {/* User can log in the idea is that the user has to log in to post something for a category */}
-        {/* Should probably allow the user to go to a profile page if they're logged in */}
-        {isAuthenticated && currentUser ? (
-          <Link to={`/u/${currentUser.username}`}>
-            <img src={userIcon} alt="User icon" />
-          </Link>
-        ) : (
-          <Link to="/login" className="login-button">
+        {!isAuthenticated ? (
+          <Link
+            to="/login"
+            className="login-button"
+            style={{ backgroundColor: "orange" }}
+          >
             Login
           </Link>
+        ) : (
+          <Link to={currentUser ? `/u/${currentUser.username}` : "/login"}>
+            <img src={userIcon} alt="User icon" />
+          </Link>
         )}
+        <button onClick={toggleMenu} className="menu-icon">
+          {showMenu ? <FaTimes size={30} /> : <FaBars size={30} />}
+        </button>
+        <div
+          className={`menu ${showMenu ? "show" : ""}`}
+          style={{ backgroundColor: "white" }}
+        >
+          <GetCategories closeMenu={toggleMenu} />
+        </div>
       </div>
     </nav>
   );
