@@ -27,11 +27,6 @@
     cursor: pointer;
 }
 
-.logout-button:hover {
-    background-color: var(--button-color-dark);
-    text-decoration: underline;
-}
-
 .bottom-container {
     margin-top: auto;
 }

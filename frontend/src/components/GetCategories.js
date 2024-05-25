@@ -6,7 +6,7 @@ import axiosInstance from "../api/axios";
 import "../styles/GetCategories.css";
 
 // GetCategories component to fetch categories and display them to the user
-function GetCategories() {
+function GetCategories({closeMenu}) {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +39,7 @@ function GetCategories() {
         {categories.map((category, index) => (
           <li key={index}>
             {/* Use category.category_id instead of category_id */}
-            <Link to={`/b/${category.name}`}>
+            <Link to={`/b/${category.name}`} onClick={closeMenu}>
               <p>b/{category.name}</p>
             </Link>
           </li>
