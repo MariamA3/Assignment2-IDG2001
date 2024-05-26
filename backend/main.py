@@ -14,7 +14,7 @@ load_dotenv()
 
 # Create a Flask application instance
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
+CORS(app, origins=[os.getenv('FRONTEND_ORIGIN')], supports_credentials=True)
 
 # Manually set configuration using environment variables
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('MYSQL_URL')
@@ -31,7 +31,7 @@ redis_cache = RedisCache()
 
 # Initialize Redis connection
 redis_client = redis.Redis(
-    host=os.getenv('REDIS_HOST', 'localhost'), 
+    host=os.getenv('REDIS_HOST', 'localhost'),
     port=int(os.getenv('REDIS_PORT', 6379)),
     db=0
 )
