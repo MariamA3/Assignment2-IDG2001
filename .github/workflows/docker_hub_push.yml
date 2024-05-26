@@ -54,7 +54,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            cd /path/to/your/app
+            cd /home/cc/myapp
             docker-compose down
             docker-compose pull
             docker-compose up -d
