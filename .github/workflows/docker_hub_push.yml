@@ -57,4 +57,4 @@ jobs:
             cd /path/to/your/app
             docker-compose down
             docker-compose pull
-            docker composure up -d
+            docker-compose up -d
