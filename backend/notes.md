@@ -10,6 +10,8 @@ export FLASK_APP=main.py
 
 # Step 1: Generate a New Migration Script
 
+fuck this shitty ssh shit
+
 # Run whenever you make changes to your SQLAlchemy models.
 
 flask db migrate -m "Description of changes"
