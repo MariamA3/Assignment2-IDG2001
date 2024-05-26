@@ -1,2 +1,4 @@
-.env
+
 __pycache__/
+FRONTEND_ORIGIN=http://129.114.25.110:8080
+.env
