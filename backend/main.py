@@ -1,13 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_cors import CORS
 from dotenv import load_dotenv
-from redis_cache import RedisCache
 import os
-import redis
-import json
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -27,20 +24,13 @@ app.config['JWT_COOKIE_CSRF_PROTECT'] = True
 # Initialize extensions with the app
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
-redis_cache = RedisCache()
-
-# Initialize Redis connection
-redis_client = redis.Redis(
-    host=os.getenv('REDIS_HOST', 'localhost'),
-    port=int(os.getenv('REDIS_PORT', 6379)),
-    db=0
-)
 
 # Import database connection and models after config is set
 from config.databaseConnect import get_db_connection, db
 from routes.users import users
 from routes.posts import posts
 from routes.categories import categories
+from routes.likes import likes  # Import the new likes blueprint
 
 # Establish a database connection when the application starts
 get_db_connection(app)
@@ -55,17 +45,7 @@ migrate = Migrate(app, db)
 app.register_blueprint(users)
 app.register_blueprint(posts)
 app.register_blueprint(categories)
-
-# Define a route for the root URL
-@app.route('/like', methods=['POST'])
-def like_post():
-    data = request.json
-    if 'user_id' not in data or 'post_id' not in data:
-        return jsonify({'error': 'Invalid data'}), 400
-
-    # Enqueue the like in Redis
-    redis_client.rpush('pending_likes', json.dumps(data))
-    return jsonify({'status': 'Like enqueued'}), 200
+app.register_blueprint(likes)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=4000)
