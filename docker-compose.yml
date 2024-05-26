@@ -1,12 +1,12 @@
 version: "3.8"
 services:
   frontend:
-    build: ./frontend
+    image: jonhels/frontend:latest
     ports:
       - "3000:3000"
 
   backend:
-    build: ./backend
+    image: jonhels/backend:latest
     ports:
       - "4000:4000"
     depends_on:
