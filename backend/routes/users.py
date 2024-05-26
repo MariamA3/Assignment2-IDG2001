@@ -6,7 +6,7 @@ from models.models import User
 from schemas.schemas import UserCreate, UserLogin
 from utils import hash_password, verify_password
 
-users = Blueprint('users', __name__)
+users = Blueprint('users', __name__, url_prefix='/api')
 
 @users.route('/register', methods=['POST'])
 def register():
