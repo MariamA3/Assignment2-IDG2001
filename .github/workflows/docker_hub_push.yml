@@ -45,13 +45,6 @@ jobs:
           push: true
           tags: jonhels/nginx:latest,jonhels/nginx:${{ github.sha }}
 
-      - name: Build and push Postgres Docker image
-        uses: docker/build-push-action@v2
-        with:
-          context: ./postgres
-          file: ./postgres/Dockerfile
-          push: true
-          tags: jonhels/postgres:latest,jonhels/postgres:${{ github.sha }}
       # Include additional steps for other services as needed
 
   deploy:
