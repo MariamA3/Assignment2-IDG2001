@@ -9,8 +9,6 @@ services:
     image: jonhels/backend:latest
     ports:
       - "4000:4000"
-    depends_on:
-      - postgres
 
   nginx:
     image: jonhels/nginx:latest
@@ -29,17 +27,6 @@ services:
   # image: jonhels/processor:latest
   #ports:
   # - "5001:5001"
-
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: yourdbname
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
   #redis:
   # image: redis:alpine
