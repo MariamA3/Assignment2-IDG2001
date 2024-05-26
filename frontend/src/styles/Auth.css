@@ -95,6 +95,10 @@
     background: var(--button-color-dark);
 }
 
+.register-login-wrapper a {
+    color: black;
+}
+
 @media (max-width: 600px) {
     .register-wrapper {
         padding: 1rem 0.5rem;

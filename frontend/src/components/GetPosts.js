@@ -10,7 +10,6 @@ function GetPosts() {
   const { categoryName } = useParams();
   const [posts, setPosts] = useState([]);
   const [likes, setLikes] = useState({});
-  const [userLikes, setUserLikes] = useState({});
   const [loading, setLoading] = useState(true);
 
   // Fetch the posts for the category when the component mounts or when the category name changes
@@ -70,17 +69,14 @@ function GetPosts() {
     }
   }, [categoryName]);
 
+  console.log(posts)
+
   // Function to handle liking a post
   const handleLike = async (postId) => {
     try {
       // Get the user ID from the post data
-      const userId = posts.user_id;
+      const userId = 1;
       // Check if the current user has already liked this post
-      if (userLikes[postId]) {
-        console.log("You have already liked this post");
-        toast.error("You have already liked this post");
-        return;
-      }
       const response = await axiosInstance.post("/like", {
         user_id: userId,
         post_id: postId,
@@ -88,7 +84,6 @@ function GetPosts() {
       if (response.status === 200) {
         setLikes({ ...likes, [postId]: (likes[postId] || 0) + 1 });
         // Update the userLikes state to indicate that the current user has liked this post
-        setUserLikes({ ...userLikes, [postId]: true });
       } else {
         console.error(response.data.message);
       }
