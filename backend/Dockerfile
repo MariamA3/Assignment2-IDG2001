@@ -12,7 +12,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Make port 5000 available to the world outside this container
-EXPOSE 5000
+EXPOSE 4000
 
 # Define environment variable
 ENV FLASK_APP=main.py
