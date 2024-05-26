@@ -44,6 +44,7 @@ def get_categories():
 
     return jsonify(serialized_data)
 
+
 # GET a specific category by ID, returns the category with the specified ID
 @categories.route('/categories/<int:id>', methods=['GET'])
 def get_category(id):
