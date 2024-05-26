@@ -32,21 +32,22 @@ function GetCategories({closeMenu}) {
     return <Loading />;
   }
 
-  // Display the categories if they are fetched successfully
-  return (
-    <div className="category-container">
-      <ul>
-        {categories.map((category, index) => (
-          <li key={index}>
-            {/* Use category.category_id instead of category_id */}
-            <Link to={`/b/${category.name}`} onClick={closeMenu}>
-              <p>b/{category.name}</p>
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+// Display the categories if they are fetched successfully
+return (
+  <div className="category-container">
+    <ul>
+      {/* Check if categories is an array before mapping */}
+      {Array.isArray(categories) && categories.map((category, index) => (
+        <li key={index}>
+          {/* Use category.category_id instead of category_id */}
+          <Link to={`/b/${category.name}`} onClick={closeMenu}>
+            <p>b/{category.name}</p>
+          </Link>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
 
 export default GetCategories;
