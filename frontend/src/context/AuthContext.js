@@ -38,13 +38,6 @@ export const AuthProvider = ({ children }) => {
     verifySession();
   }, [isAuthenticated]);
 
-  useEffect(() => {
-    if (!isLoading) {
-      console.log("Current user:", currentUser);
-      console.log("Authenticated:", isAuthenticated);
-    }
-  }, [currentUser, isAuthenticated, isLoading]);
-
   // Function to handle user login
   const login = async ({ username, password }) => {
     try {

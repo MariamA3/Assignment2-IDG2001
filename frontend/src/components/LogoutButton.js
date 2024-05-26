@@ -6,6 +6,7 @@ function LogoutButton() {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
+  // Function to handle logout
   const handleLogout = async () => {
     try {
       await logout();

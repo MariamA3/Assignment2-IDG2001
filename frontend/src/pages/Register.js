@@ -64,7 +64,6 @@ function Register() {
     setIsSubmitting(true);
     try {
       const response = await axiosInstance.post("/register", formData);
-      console.log("Registration successful:", response.data);
       toast.success("Registration successful! Please login to continue.");
       navigate("/login");
     } catch (error) {
