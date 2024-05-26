@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from datetime import datetime
 from config.databaseConnect import db
 from models.models import Post
@@ -15,7 +15,7 @@ except redis.exceptions.ConnectionError as e:
     redis_client = None
 
 # Create a Blueprint object for posts
-posts = Blueprint('posts', __name__)
+posts = Blueprint('posts', __name__, url_prefix='/api')
 
 # Helper function to check Redis connection
 def is_redis_connected():
