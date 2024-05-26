@@ -17,7 +17,7 @@ EXPOSE 4000
 # Define environment variable
 ENV FLASK_APP=main.py
 ENV FLASK_RUN_HOST=0.0.0.0
-ENV FLASK_RUN_PORT=5000
+ENV FLASK_RUN_PORT=4000
 
 # Use flask run to start the application
 CMD ["flask", "run"]
