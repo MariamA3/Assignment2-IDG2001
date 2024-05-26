@@ -45,6 +45,14 @@ jobs:
           push: true
           tags: jonhels/nginx:latest,jonhels/nginx:${{ github.sha }}
 
+      - name: Build and push Redis Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./redis
+          file: ./redis/Dockerfile
+          push: true
+          tags: jonhels/redis:latest,jonhels/redis:${{ github.sha }}
+
       # Include additional steps for other services as needed
 
   deploy:

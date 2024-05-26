@@ -20,20 +20,10 @@ services:
       - frontend
       - backend
 
-  #memcached:
-  # image: memcached:alpine
-  #expose:
-  # - "11211"
-
-  #processor:
-  # image: jonhels/processor:latest
-  #ports:
-  # - "5001:5001"
-
-  #redis:
-  # image: redis:alpine
-  #ports:
-  # - "6379:6379"
+  redis:
+    image: jonhels/redis:latest
+    ports:
+      - "6379:6379"
 
 volumes:
   pgdata:
