@@ -6,8 +6,8 @@ import json
 import redis
 import logging
 
-# Create a Blueprint object for categories, which represents the categories routes
-categories = Blueprint('categories', __name__)
+# Create a Blueprint object for categories, with the /api prefix
+categories = Blueprint('categories', __name__, url_prefix='/api')
 
 # Initialize RedisCache instance
 redis_cache = RedisCache()
