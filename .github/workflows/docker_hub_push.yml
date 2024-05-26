@@ -37,6 +37,14 @@ jobs:
           push: true
           tags: jonhels/backend:latest,jonhels/backend:${{ github.sha }}
 
+      - name: Build and push Nginx Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: ./nginx
+          file: ./nginx/Dockerfile
+          push: true
+          tags: jonhels/nginx:latest,jonhels/nginx:${{ github.sha }}
+
       # Include additional steps for other services as needed
 
   deploy:
