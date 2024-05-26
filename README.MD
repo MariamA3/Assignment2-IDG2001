@@ -2,7 +2,7 @@
 
 ## Overview
 This project aims to develop a simplified version of a Reddit-like forum website using Docker and DockerCompose, hosted on the Chameleon Cloud (OpenStack). The website allows users to interact by creating and browsing posts within different categories, similar to subreddits.
-
+dlksajdjkasd
 ## Features
 - **User Authentication and Management:** Users can create accounts, log in, and manage their profiles. User information such as username, email, and password (hashed and salted) are stored securely.
 - **Post Creation and Interaction:** Users can create posts within predefined categories. Each post includes essential information such as user, category, text, date, and the number of likes. Additionally, users can interact with posts by liking them.
@@ -42,7 +42,7 @@ To ensure the `like_batcher.py` script runs continuously, you can set it up as a
 
    ```sh
    sudo nano /etc/systemd/system/like_batcher.service
-2. 
+2.
 
 ## Testing
 1. Ensure all containers are running using `docker ps`.
@@ -136,8 +136,8 @@ database is used to store user data, post information, and other relevant data. 
 - login system med autentisering
 
 ## Mariam
-- cache: Lagt in instance for redis i main.py, må finne ut om disse skal inn i categories, posts, og users.   
-- Gotta fix this somehow, when try to import database, it doesnt work, so having db 
+- cache: Lagt in instance for redis i main.py, må finne ut om disse skal inn i categories, posts, og users.
+- Gotta fix this somehow, when try to import database, it doesnt work, so having db
 connection here is the only way it works for some reason.
 
 
