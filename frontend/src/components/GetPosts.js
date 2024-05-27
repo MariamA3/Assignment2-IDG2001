@@ -69,13 +69,11 @@ function GetPosts() {
     }
   }, [categoryName]);
 
-  console.log(posts)
-
   // Function to handle liking a post
   const handleLike = async (postId) => {
     try {
       // Get the user ID from the post data
-      const userId = 1;
+      const userId = posts[0].user_id;
       // Check if the current user has already liked this post
       const response = await axiosInstance.post("/like", {
         user_id: userId,
@@ -110,11 +108,10 @@ function GetPosts() {
     <div>
       {posts.map((post) => (
         <div key={post.post_id} className="post-container">
-          <h2 className="post-title">Title: {post.title}</h2>
-          <p className="post-content">Content: {post.content}</p>
-          <p className="post-footer">Category: {post.category_id}</p>
-          <p className="post-footer">Date: {post.created_at}</p>
+          <h2 className="post-title">{post.title}</h2>
+          <p className="post-content">{post.content}</p>
           <p className="post-footer">Posted by: {post.username}</p>
+          <p className="post-footer">Date: {post.created_at}</p>
           <button
             onClick={() => handleLike(post.post_id)}
             className="like-button"
