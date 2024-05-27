@@ -52,11 +52,12 @@ def process_likes():
         while True:
             # Check Redis for pending likes
             pending_likes = redis_client.lrange('pending_likes', 0, -1)
-            if pending_likes and len(pending_likes) >= BATCH_SIZE: 
+            if pending_likes and len(pending_likes) >= BATCH_SIZE:
                 # Process likes only if the batch size threshold is reached
                 process_likes_batch(pending_likes)
                 # Remove processed likes from Redis
-                redis_client.delete('pending_likes')
+                redis_client.ltrim('pending_likes', BATCH_SIZE, -1)
+
             # Wait for some time before checking again
             time.sleep(10)
 
