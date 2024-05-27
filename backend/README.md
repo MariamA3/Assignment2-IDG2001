@@ -9,8 +9,6 @@ cd backend
 python main.py
 ```
 
-hehe
-
 ## Database connection
 
 To run the database you will need to create a .env file in the backend folder with the following content:
